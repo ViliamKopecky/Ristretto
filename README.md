@@ -6,11 +6,13 @@ Frontend development with LESS, Bower and Latte.
 Before first run
 ================
 
-Assuming you have Node.js and NPM.
+You need executable **PHP** + [**Composer**](http://getcomposer.org/), [**Node.js** + **NPM**](http://nodejs.org/).
 
-**Install globally Bower**
+**Install globally Bower and LESS compiler**
 
-´$ npm install -g bower´
+`$ npm install -g bower`
+
+`$ npm install -g less`
 
 **Update Bower components**
 
@@ -22,7 +24,7 @@ Update Node.js packages and Composer packages
 
 `$ npm update`
 
-`$ composer update` (depends on how do you have it)
+`$ composer update` *(depends on how is your Composer set)*
 
 Run on windows
 ==============
