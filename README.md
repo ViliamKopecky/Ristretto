@@ -3,6 +3,8 @@ Mixturette
 
 Frontend development with **LESS**, **Bower** and **Latte**. This utility is based on the idea of [**Mixture**](http://mixture.io).
 
+![Mixturette screenshot](https://dl.dropbox.com/u/105619924/mixturette/screenshot.mixturette.png)
+
 Before first run
 ================
 
