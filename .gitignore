@@ -1,7 +1,2 @@
 runner/node_modules
-runner/app/temp
-runner/app/log
-runner/app/libs
 runner/composer.lock
-components
-css
