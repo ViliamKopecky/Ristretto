@@ -6,7 +6,10 @@ var http = require('http');
 var colors = require('colors');
 var socketio = require('socket.io');
 
-var appendScript = '<script src="/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("/");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
+var port = 3332;
+var socket_port = 3331;
+
+var appendScript = '<script src="//localhost:'+socket_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//localhost:'+socket_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
 
 var app = connect()
 	.use(connect.favicon(__dirname + '/../img/favicon.ico'))
@@ -26,8 +29,9 @@ var app = connect()
 });
 
 var server = http.createServer(app);
+var socket_server = http.createServer();
 
-var io = socketio.listen(server);
+var io = socketio.listen(socket_server);
 
 io.set('log level', 1);
 
@@ -41,7 +45,8 @@ io.sockets.on('connection', function (socket) {
 	});
 });
 
-server.listen(3332);
+server.listen(port);
+socket_server.listen(socket_port);
 
 var dirtyState = false;
 var compilations = 0;
