@@ -5,6 +5,7 @@
   "author": "Viliam Kopecky <vk@viliamkopecky.cz>",
   "license": "BSD",
   "dependencies": {
+    "socket.io": "",
     "colors": "",
     "connect": ""
   }
