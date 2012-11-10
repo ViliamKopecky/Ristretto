@@ -2,10 +2,11 @@
 
 use Nette\Utils\Neon;
 use Nette\Utils\Finder;
+use Nette\Utils\Strings;
 use Nette\Templating\FileTemplate;
 
-$modelDir = $context->parameters["modelDir"];
-$templatesDir = $context->parameters["templatesDir"];
+$modelDir = realpath($context->parameters["modelDir"]);
+$templatesDir = realpath($context->parameters["templatesDir"]);
 
 function importModel($filetype, $dir, $parse_function) {
 	$model = array();
@@ -48,5 +49,16 @@ if(file_exists($file)) {
 	
 	$template->render();
 } else {
-	echo "<h1 style='font-family:sans-serif;text-align:center'>Welcome to <a href='https://github.com/ViliamKopecky/Mixturette'>Mixturette</a></h1>";
+	echo "<div style='font-family:sans-serif;text-align:center;line-height:150%;margin-top:30px;'>";
+	echo "<h1>Welcome to <a href='https://github.com/ViliamKopecky/Mixturette'>Mixturette</a></h1>";
+	foreach (Finder::findFiles('*.latte')->in($templatesDir) as $path => $file) {
+		$filename = $file->getFilename();
+		if(substr($filename, 0, 1) !== '@') {
+			$relativePath = str_replace($templatesDir, '', $path);
+			$relativePath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
+			$relativePath = str_replace('.latte', '', $relativePath);
+			echo "<a href='$relativePath'>$filename</a><br>";
+		}
+	}
+	echo "</div>";
 }
