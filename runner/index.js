@@ -28,6 +28,8 @@ var server = http.createServer(app);
 
 var io = socketio.listen(server);
 
+io.set('log level', 1);
+
 var connections = {};
 
 io.sockets.on('connection', function (socket) {
