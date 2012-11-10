@@ -6,7 +6,7 @@ Frontend development with **LESS**, **Bower** and **Latte**. This utility is bas
 Before first run
 ================
 
-You need executable **PHP** + [**Composer**](http://getcomposer.org/), [**Node.js** + **NPM**](http://nodejs.org/).
+You need executable **PHP**, [**Node.js** + **NPM**](http://nodejs.org/).
 
 **Install globally Bower and LESS compiler**
 
@@ -24,7 +24,7 @@ Update Node.js packages and Composer packages
 
 `$ npm update`
 
-`$ composer update` *(depends on how is your Composer set)*
+`$ php composer.phar update`
 
 Run on windows
 ==============
