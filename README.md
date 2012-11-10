@@ -19,6 +19,7 @@ Assuming you have Node.js and NPM.
 Update Node.js packages
 
 `$ cd runner`
+
 `$ npm update`
 
 Run on windows
