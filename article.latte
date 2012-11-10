@@ -1,6 +1,6 @@
 {extends @layout.latte}
 
-{$article = $model->articles[0]}
+{var $article = $model->articles[0]}
 
 {#title}{$article->caption}{/#}
 {#content}

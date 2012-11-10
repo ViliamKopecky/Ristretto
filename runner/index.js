@@ -48,6 +48,8 @@ io.sockets.on('connection', function (socket) {
 server.listen(port);
 socket_server.listen(socket_port);
 
+console.log('[%s]', 'enjoy localhost:'+port);
+
 var dirtyState = false;
 var compilations = 0;
 var reloadConnections = function() {
@@ -116,8 +118,6 @@ setInterval(reloadConnections, 150);
 		if(ignore.indexOf(filename) === -1) {
 			dirtyState = true;
 			console.log("CHANGED: %s".yellow, file);
-		} else {
-			console.log("CHANGED and ignored: %s".yellow, file);
 		}
 	};
 	watch(dir, check);
