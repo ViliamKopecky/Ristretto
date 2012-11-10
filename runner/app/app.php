@@ -4,23 +4,27 @@ use Nette\Utils\Neon;
 use Nette\Utils\Finder;
 use Nette\Templating\FileTemplate;
 
-$neon = new Neon();
-
-$model = array();
-
-foreach (Finder::findFiles('*.json')->in(MODEL_DIR) as $path => $file) {
-	$parts = explode(DIRECTORY_SEPARATOR, $path);
-	$file_parts = explode('.', array_pop($parts));
-	$model_name = array_shift($file_parts);
-	$model[$model_name] = json_decode(file_get_contents('safe://' . $path));
+function importModel($filetype, $parse_function) {
+	$model = array();
+	foreach (Finder::findFiles('*.'.$filetype)->in(MODEL_DIR) as $path => $file) {
+		$parts = explode(DIRECTORY_SEPARATOR, $path);
+		$file_parts = explode('.', array_pop($parts));
+		$model_name = array_shift($file_parts);
+		$model[$model_name] = $parse_function(file_get_contents('safe://' . $path));
+	}
+	return $model;
 }
-foreach (Finder::findFiles('*.neon')->in(MODEL_DIR) as $path => $file) {
-	$parts = explode(DIRECTORY_SEPARATOR, $path);
-	$file_parts = explode('.', array_pop($parts));
-	$model_name = array_shift($file_parts);
-	$model[$model_name] = $neon->decode(file_get_contents('safe://' . $path));
-}
-$model = json_decode(json_encode($model));
+
+$json = importModel('json', function($str) {
+	return json_decode($str);
+});
+
+$neon = importModel('neon', function($str) {
+	$neon = new Neon();
+	return $neon->decode($str);
+});
+
+$model = json_decode(json_encode($json + $neon));
 
 $file = TEMPLATES_DIR . '/' . $argv[1] . '.latte';
 
