@@ -17,10 +17,10 @@ var colors = require('colors');
 	var dirty = true;
 
 	var compile = function(input, output) {
-			exec("lessc -x " + input + " > " + output, function(error, stdout, stderr) {
-				if(stdout) console.log("%s", stdout);
-				if(stderr) console.log("ERROR: %s", stderr);
-				if(!error) console.log("LESS COMPILED | %s\r\n", new Date().toLocaleTimeString());
+			exec('lessc -x ' + input + ' > ' + output, function(error, stdout, stderr) {
+				if(stdout) console.log('%s', stdout);
+				if(stderr) console.log('ERROR: %s'.red, stderr);
+				if(!error) console.log('LESS COMPILED | %s'.yellow, new Date().toLocaleTimeString());
 			});
 		};
 
@@ -51,16 +51,16 @@ var colors = require('colors');
 var app = connect()
 	.use(connect.favicon(__dirname + '/../img/favicon.ico'))
 	.use(connect.logger('dev'))
-	.use(connect.static(__dirname + "/.."))
+	.use(connect.static(__dirname + '/..'))
 	.use(function(req, res) {
 	var path = req.originalUrl.substr(1);
 
-	if(path === "") {
-		path = "index";
+	if(path === '') {
+		path = 'index';
 	}
 
-	exec("php \"" + __dirname + "/app/index.php\" " + path, function(error, stdout, stderr) {
-		if(stderr) console.log("ERROR: " + stderr);
+	exec('php "' + __dirname + '/app/index.php" ' + path, function(error, stdout, stderr) {
+		if(stderr) console.log('ERROR: %s'.red, stderr);
 		if(!error) res.end(stdout);
 	});
 });

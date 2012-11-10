@@ -1,3 +1,8 @@
 php:
 	date.timezone: Europe/Prague
 	# zlib.output_compression: yes
+
+parameters:
+	rootDir: "%appDir%/../.."
+	templatesDir: %rootDir%
+	modelDir: "%rootDir%/model"

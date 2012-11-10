@@ -4,9 +4,12 @@ use Nette\Utils\Neon;
 use Nette\Utils\Finder;
 use Nette\Templating\FileTemplate;
 
-function importModel($filetype, $parse_function) {
+$modelDir = $context->parameters["modelDir"];
+$templatesDir = $context->parameters["templatesDir"];
+
+function importModel($filetype, $dir, $parse_function) {
 	$model = array();
-	foreach (Finder::findFiles('*.'.$filetype)->in(MODEL_DIR) as $path => $file) {
+	foreach (Finder::findFiles('*.'.$filetype)->in($dir) as $path => $file) {
 		$parts = explode(DIRECTORY_SEPARATOR, $path);
 		$file_parts = explode('.', array_pop($parts));
 		$model_name = array_shift($file_parts);
@@ -15,36 +18,37 @@ function importModel($filetype, $parse_function) {
 	return $model;
 }
 
-$json = importModel('json', function($str) {
+$json = importModel('json', $modelDir, function($str) {
 	return json_decode($str);
 });
 
-$neon = importModel('neon', function($str) {
+$neon = importModel('neon', $modelDir, function($str) {
 	$neon = new Neon();
 	return $neon->decode($str);
 });
 
 $model = json_decode(json_encode($json + $neon));
 
-$file = TEMPLATES_DIR . '/' . $argv[1] . '.latte';
+$filename = $argv[1];
+$file = $templatesDir . "/$filename.latte";
 
 if(!file_exists($file)) {
-	$file = TEMPLATES_DIR . '/404.latte';
+	$file = $templatesDir . '/404.latte';
 }
 
 if(file_exists($file)) {
 	$template = new FileTemplate($file);
 
 	$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-
 	$template->onPrepareFilters[] = function($template) {
 	    $template->registerFilter(new Nette\Latte\Engine);
 	};
 
+	$template->context = $context;
 	$template->model = $model;
-
+	
 	$template->render();
 } else {
-	echo "no file yet";
+	echo "<h1 style='font-family:sans-serif;text-align:center'>Welcome to <a href='https://github.com/ViliamKopecky/Mixturette'>Mixturette</a></h1>";
 }
 
