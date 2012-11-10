@@ -4,7 +4,7 @@ Mixturette
 Frontend development with LESS, Bower and Latte.
 
 Before first run
-----------------
+================
 
 Assuming you have Node.js and NPM.
 
@@ -23,12 +23,12 @@ Update Node.js packages
 `$ npm update`
 
 Run on windows
---------------
+==============
 
 `$ run.bat`
 
 Run in shell
-------------
+============
 
 `$ node runner/index.js`
 
