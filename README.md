@@ -1,7 +1,14 @@
 Mixturette
 ==========
 
-Frontend development with **LESS**, **Bower** and **Latte**. This utility is based on the idea of [**Mixture**](http://mixture.io).
+Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**](https://npmjs.org/package/bower) and [**Latte**](https://github.com/nette/Latte). This utility is based on the idea of [**Mixture**](http://mixture.io).
+
+- Running server on `http://localhost:3332`. *Access `/foobar` will respond with compiled `./foobar.latte`.*
+- [**Latte**](http://doc.nette.org/en/default-macros) - the killer templating from [**Nette Framework**](https://nette.org).
+- **Static model** passed directly into templates parsed from [**NE-ON**](http://ne-on.org) and **JSON** files. *`./model/foobar.json` is in template accessible as `{$model->foobar}`.*
+- **Realtime compilation** of **LESS** files.
+- [**Bower**](https://npmjs.org/package/bower) - package manager for web (JS, CSS, LESS, etc.) dependencies.
+- [**Test'em**](https://npmjs.org/package/testem) - easy testing engine for client-side JS. *Using [**Jasmine**](https://npmjs.org/package/jasmine) by default.*
 
 ![Mixturette screenshot](https://dl.dropbox.com/u/105619924/mixturette/screenshot.mixturette.png)
 
@@ -61,4 +68,6 @@ Live reload on file change.
 
 Minification of assets.
 
-Export/publish to pure html+css+js for easy sharing.
+Export/publish to pure HTML+CSS+JS for easy sharing.
+
+Better template helpers and macros configuration.
