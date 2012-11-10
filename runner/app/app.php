@@ -27,6 +27,7 @@ $neon = importModel('neon', $modelDir, function($str) {
 	return $neon->decode($str);
 });
 
+// convert multidimensional array to stdClasses
 $model = json_decode(json_encode($json + $neon));
 
 $filename = $argv[1];
@@ -40,9 +41,7 @@ if(file_exists($file)) {
 	$template = new FileTemplate($file);
 
 	$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-	$template->onPrepareFilters[] = function($template) {
-	    $template->registerFilter(new Nette\Latte\Engine);
-	};
+	$template->registerFilter(new Nette\Latte\Engine);
 
 	$template->context = $context;
 	$template->model = $model;
@@ -51,4 +50,3 @@ if(file_exists($file)) {
 } else {
 	echo "<h1 style='font-family:sans-serif;text-align:center'>Welcome to <a href='https://github.com/ViliamKopecky/Mixturette'>Mixturette</a></h1>";
 }
-
