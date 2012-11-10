@@ -1,7 +1,7 @@
 Mixturette
 ==========
 
-Frontend development with **LESS**, **Bower** and **Latte**.
+Frontend development with **LESS**, **Bower** and **Latte**. This utility is based on the idea of [**Mixture**](http://mixture.io).
 
 Before first run
 ================
