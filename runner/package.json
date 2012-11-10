@@ -4,6 +4,9 @@
   "description": "Frontend development with LESS, Bower and Latte.",
   "author": "Viliam Kopecky <vk@viliamkopecky.cz>",
   "license": "BSD",
+  "engines": {
+  	"node": ">=0.9.0"
+  },
   "dependencies": {
     "node-watch": "",
     "socket.io": "",
