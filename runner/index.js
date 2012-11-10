@@ -1,5 +1,6 @@
 var fs = require('fs');
 var exec = require('child_process').exec;
+var watch = require('node-watch');
 var connect = require('connect');
 var http = require('http');
 var colors = require('colors');
@@ -90,7 +91,7 @@ setInterval(reloadConnections, 150);
 			setTimeout(check, interval);
 		};
 
-	fs.watch(watch_dir, function() {
+	watch(watch_dir, function() {
 		dirty = true;
 	});
 
@@ -102,30 +103,17 @@ setInterval(reloadConnections, 150);
 	var ignore = [".git"];
 
 	var dir = __dirname + '/..';
-	var watch_dirs = [
-		dir,
-		dir + '/css',
-		dir + '/js',
-		dir + '/img',
-		dir + '/model',
-		dir + '/runner',
-		dir + '/runner/app',
-		dir + '/components'
-	];
 
 	var interval = 100; // ms
 
-	var check = function(type, filename) {
+	var check = function(file) {
+		var filename = file.split('\/').pop().split('\\').pop();
 		if(ignore.indexOf(filename) === -1) {
 			dirtyState = true;
-			console.log("CHANGED: %s".yellow, filename);
+			console.log("CHANGED: %s".yellow, file);
 		} else {
-			console.log("CHANGED and ignored: %s".yellow, filename);
+			console.log("CHANGED and ignored: %s".yellow, file);
 		}
 	};
-
-	for(var i in watch_dirs) {
-		if(fs.existsSync(watch_dirs[i]))
-			fs.watch(watch_dirs[i], check);
-	}
+	watch(dir, check);
 })();
