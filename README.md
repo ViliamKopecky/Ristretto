@@ -6,13 +6,17 @@ Frontend development with **LESS**, **Bower** and **Latte**. This utility is bas
 Before first run
 ================
 
-You need executable **PHP**, [**Node.js** + **NPM**](http://nodejs.org/).
+You need executable **PHP** and [**Node.js** + **NPM**](http://nodejs.org/).
 
-**Install globally Bower and LESS compiler**
+**Install globally [Bower](https://npmjs.org/package/bower) and [LESS](https://npmjs.org/package/less) compiler**
 
 `$ npm install -g bower`
 
 `$ npm install -g less`
+
+**If you want to test client-side javascript, install [**Test'em**](https://npmjs.org/package/testem)**
+
+`$ npm install -g testem`
 
 **Update Bower components**
 
@@ -38,10 +42,17 @@ Run in shell
 
 Enjoy `http://localhost:3332`
 
+Client-side javascript testing with Test'em
+===========================================
+
+See file `testem.json` with configuration. And run tests by:
+
+`$ testem`
+
 
 Near future
 ===========
 
-Realtime compilation of [**CoffeeScript**](https://npmjs.org/package/coffee-script), [**TypeScript**](https://npmjs.org/package/typescript) and testing client-side javascript with [**Testem**](https://npmjs.org/package/testem).
+Realtime compilation of [**CoffeeScript**](https://npmjs.org/package/coffee-script), [**TypeScript**](https://npmjs.org/package/typescript).
 
 Live reload on file change.
