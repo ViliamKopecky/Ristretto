@@ -1,0 +1,16 @@
+{
+    "name": "ViliamKopecky/mixturette",
+    "description": "Frontend development with LESS, Bower and Latte.",
+    "config": {
+        "vendor-dir": "app/libs"
+    },
+    "require": {
+        "nette/nette": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "ViliamKopecky",
+            "email": "vk@viliamkopecky.cz"
+        }
+    ]
+}

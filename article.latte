@@ -1,0 +1,9 @@
+{extends @layout.latte}
+
+{$article = $model->articles[0]}
+
+{#title}Article {$article->caption}{/#}
+{#content}
+<p><a href="/">back</a></p>
+<h1>{include #title}</h1>
+<p>{$article->perex}</p>

@@ -1,0 +1,13 @@
+{extends @layout.latte}
+
+
+{#title}Hello, {$model->user->name} {$model->user->lastname}!{/#}
+{#content}
+<h1>{include #title}</h1>
+
+<p>This is extended body!<p/>
+
+<div class="article" n:foreach="$model->articles as $article">
+	<h3><a href="article">{$article->caption}</a></h3>
+	<p>{$article->perex}</p>
+</div>
