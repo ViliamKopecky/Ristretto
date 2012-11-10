@@ -9,7 +9,7 @@ Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**
 - **Realtime compilation** of **LESS** files.
 - [**Bower**](https://npmjs.org/package/bower) - package manager for web (JS, CSS, LESS, etc.) dependencies.
 - [**Test'em**](https://npmjs.org/package/testem) - easy testing engine for client-side JS. *Using [**Jasmine**](https://npmjs.org/package/jasmine) by default.*
-- **and… wait for it… LIVE RELOAD on file change.**
+- **and… wait for it… LIVE RELOAD on file change.** (seems to work only on Windows)
 
 ![Mixturette screenshot](https://dl.dropbox.com/u/105619924/mixturette/screenshot.mixturette.png)
 
