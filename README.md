@@ -16,11 +16,13 @@ Assuming you have Node.js and NPM.
 
 `$ bower update`
 
-Update Node.js packages
+Update Node.js packages and Composer packages
 
 `$ cd runner`
 
 `$ npm update`
+
+`$ composer update` (depends on how do you have it)
 
 Run on windows
 ==============
