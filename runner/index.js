@@ -48,7 +48,11 @@ var colors = require('colors');
 
 
 
-var app = connect().use(connect.favicon(__dirname + '/../img/favicon.ico')).use(connect.logger('dev')).use(connect.static(__dirname + "/..")).use(function(req, res) {
+var app = connect()
+	.use(connect.favicon(__dirname + '/../img/favicon.ico'))
+	.use(connect.logger('dev'))
+	.use(connect.static(__dirname + "/.."))
+	.use(function(req, res) {
 	var path = req.originalUrl.substr(1);
 
 	if(path === "") {
@@ -56,7 +60,6 @@ var app = connect().use(connect.favicon(__dirname + '/../img/favicon.ico')).use(
 	}
 
 	exec("php \"" + __dirname + "/app/index.php\" " + path, function(error, stdout, stderr) {
-		if(stdout) console.log(stdout);
 		if(stderr) console.log("ERROR: " + stderr);
 		if(!error) res.end(stdout);
 	});
