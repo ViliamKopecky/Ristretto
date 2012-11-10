@@ -6,7 +6,7 @@ Frontend development with **LESS**, **Bower** and **Latte**. This utility is bas
 Before first run
 ================
 
-You need executable **PHP** and [**Node.js** + **NPM**](http://nodejs.org/).
+*You need executable **PHP** and [**Node.js** + **NPM**](http://nodejs.org/).*
 
 **Install globally [Bower](https://npmjs.org/package/bower) and [LESS](https://npmjs.org/package/less) compiler**
 
@@ -22,13 +22,13 @@ You need executable **PHP** and [**Node.js** + **NPM**](http://nodejs.org/).
 
 `$ bower update`
 
-Update Node.js packages and Composer packages
+**Update [Node.js](http://nodejs.org/) packages and [Composer](http://getcomposer.org/) packages**
 
-`$ cd runner`
+`$ cd ./runner`
 
-`$ npm update`
+`./runner $ npm update`
 
-`$ php composer.phar update`
+`./runner $ php composer.phar update`
 
 Run on windows
 ==============
@@ -38,7 +38,7 @@ Run on windows
 Run in shell
 ============
 
-`$ node runner/index.js`
+`$ node ./runner/index.js`
 
 Enjoy `http://localhost:3332`
 
@@ -56,3 +56,7 @@ Near future
 Realtime compilation of [**CoffeeScript**](https://npmjs.org/package/coffee-script), [**TypeScript**](https://npmjs.org/package/typescript).
 
 Live reload on file change.
+
+Minification of assets.
+
+Export/publish to pure html+css+js for easy sharing.
