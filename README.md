@@ -43,3 +43,5 @@ Near future
 ===========
 
 Realtime compilation of [**CoffeeScript**](https://npmjs.org/package/coffee-script), [**TypeScript**](https://npmjs.org/package/typescript) and testing client-side javascript with [**Testem**](https://npmjs.org/package/testem).
+
+Live reload on file change.
