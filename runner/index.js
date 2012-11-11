@@ -99,6 +99,8 @@ setInterval(reloadConnections, 100);
 	fw.on('change', function(filename){
 		compileAll();
 	});
+
+	compileAll();
 })();
 
 (function() {
