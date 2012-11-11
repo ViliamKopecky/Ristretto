@@ -39,7 +39,7 @@ Before first run
 `./runner $ php composer.phar update`
 
 Run, Forrest, run!
-============
+==================
 
 `$ node ./runner`
 
