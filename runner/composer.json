@@ -5,7 +5,8 @@
         "vendor-dir": "app/libs"
     },
     "require": {
-        "nette/nette": "dev-master"
+        "nette/nette": "dev-master",
+        "dg/texy": "dev-master"
     },
     "authors": [
         {
