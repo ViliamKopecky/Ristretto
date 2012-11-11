@@ -30,7 +30,7 @@ Before first run
 
 **Update Bower components**
 
-`./data $ bower update`
+`./www $ bower update`
 
 **Update [Node.js](http://nodejs.org/) packages and [Composer](http://getcomposer.org/) packages**
 
@@ -76,7 +76,7 @@ Client-side javascript testing with Test'em
 
 See file `testem.json` with configuration. And run tests by:
 
-`./data $ testem`
+`./www $ testem`
 
 Near future
 ===========
