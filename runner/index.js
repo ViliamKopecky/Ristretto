@@ -77,6 +77,7 @@ setInterval(reloadConnections, 100);
 
 	var compile = function(input, output) {
 		compilations++;
+		dirtyState = true;
 		exec('lessc -x ' + input + ' > ' + output, function(error, stdout, stderr) {
 			if(stdout) console.log('%s', stdout);
 			if(stderr) console.log('ERROR: %s'.red, stderr);
