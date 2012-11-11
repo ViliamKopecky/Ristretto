@@ -13,9 +13,9 @@ var socket_port = 3331;
 var appendScript = '<script src="//localhost:'+socket_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//localhost:'+socket_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
 
 var app = connect()
-	.use(connect.favicon(__dirname + '/../img/favicon.ico'))
+	.use(connect.favicon(__dirname + '/../data/img/favicon.ico'))
 	.use(connect.logger('dev'))
-	.use(connect.static(__dirname + '/..'))
+	.use(connect.static(__dirname + '/../data'))
 	.use(function(req, res) {
 	var path = req.originalUrl.substr(1);
 
@@ -64,13 +64,13 @@ var reloadConnections = function() {
 setInterval(reloadConnections, 100);
 
 (function() {
-	var watch_dir = __dirname + '/../less';
+	var watch_dir = __dirname + '/../data/less';
 
 	var files = {
 		//	'input.less': 'output.css'
 	};
 
-	files[__dirname + '/../less/screen.less'] = __dirname + '/../css/screen.css';
+	files[__dirname + '/../data/less/screen.less'] = __dirname + '/../data/css/screen.css';
 
 	var interval = 100; // ms
 	var dirty = true;
@@ -104,7 +104,7 @@ setInterval(reloadConnections, 100);
 (function() {
 	var ignore = [".git"];
 
-	var dir = __dirname + '/..';
+	var dir = __dirname + '/../data';
 
 	var interval = 100; // ms
 
