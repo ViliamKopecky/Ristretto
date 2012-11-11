@@ -1,10 +1,11 @@
 var fs = require('fs');
 var exec = require('child_process').exec;
-var watch = require('node-watch');
 var connect = require('connect');
 var http = require('http');
 var colors = require('colors');
 var socketio = require('socket.io');
+var FileWatcher = require('./filewatcher');
+var path = require('path');
 
 var port = 3332;
 var socket_port = 3331;
@@ -60,7 +61,7 @@ var reloadConnections = function() {
 		dirtyState = false;
 	}
 };
-setInterval(reloadConnections, 150);
+setInterval(reloadConnections, 100);
 
 (function() {
 	var watch_dir = __dirname + '/../less';
@@ -81,6 +82,7 @@ setInterval(reloadConnections, 150);
 			if(stderr) console.log('ERROR: %s'.red, stderr);
 			if(!error) console.log('LESS COMPILED | %s'.yellow, new Date().toLocaleTimeString());
 			compilations--;
+			compilations = Math.max(0, compilations);
 		});
 	};
 
@@ -90,20 +92,12 @@ setInterval(reloadConnections, 150);
 			}
 		};
 
-	var check = function() {
-			if(dirty) {
-				dirty = false;
-				compileAll();
-			}
-			setTimeout(check, interval);
-		};
+	var fw = new FileWatcher();
 
-	watch(watch_dir, function() {
-		dirty = true;
+	fw.add(path.relative(process.env.PWD, watch_dir)+"/**");
+	fw.on('change', function(filename){
+		compileAll();
 	});
-
-	// run checking
-	check();
 })();
 
 (function() {
@@ -120,5 +114,9 @@ setInterval(reloadConnections, 150);
 			console.log("CHANGED: %s".yellow, file);
 		}
 	};
-	watch(dir, check);
+
+	var fw = new FileWatcher();
+
+	fw.add(path.relative(process.env.PWD, dir)+"/**");
+	fw.on('change', check);
 })();
