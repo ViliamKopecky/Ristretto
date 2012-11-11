@@ -9,5 +9,5 @@
 
 <div class="article" n:foreach="$model->articles as $article">
 	<h3><a href="article">{$article->caption}</a></h3>
-	<p>{$article->perex}</p>
+	{!$article->perex|texy}
 </div>

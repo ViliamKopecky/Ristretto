@@ -44,6 +44,16 @@ if(file_exists($file)) {
 	$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 	$template->registerFilter(new Nette\Latte\Engine);
 
+	$texy = new \Texy();
+
+	$template->registerHelper('texy', function ($s) use ($texy) {
+		return $texy->process($s);
+	});
+
+	$template->registerHelper('texyline', function ($s) use ($texy) {
+		return $texy->processLine($s);
+	});
+
 	$template->context = $context;
 	$template->model = $model;
 	
