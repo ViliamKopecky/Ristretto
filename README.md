@@ -38,12 +38,7 @@ Before first run
 
 `./runner $ php composer.phar update`
 
-Run on windows
-==============
-
-`$ run.bat`
-
-Run in shell
+Run, Forrest, run!
 ============
 
 `$ node ./runner/index.js`
@@ -56,7 +51,6 @@ Client-side javascript testing with Test'em
 See file `testem.json` with configuration. And run tests by:
 
 `./data $ testem`
-
 
 Near future
 ===========
