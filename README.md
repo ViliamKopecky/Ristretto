@@ -16,7 +16,7 @@ Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**
 Before first run
 ================
 
-*You need executable **PHP** and [**Node.js** + **NPM**](http://nodejs.org/).*
+*You need executable [**PHP**](http://php.net) and [**Node.js** + **NPM**](http://nodejs.org/).*
 
 **Install globally [Bower](https://npmjs.org/package/bower) and [LESS](https://npmjs.org/package/less) compiler**
 
