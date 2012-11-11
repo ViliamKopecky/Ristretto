@@ -13,14 +13,15 @@ if(fs.existsSync('mixturette.json'))
 
 var host = config.host || '0.0.0.0';
 var port = config.port || 3332;
-var socket_port = config.socket_port || 3331;
+var socketio_port = config.socketio_port || 3331;
 
-var appendScript = '<script src="//'+host+':'+socket_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//'+host+':'+socket_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
+if(socketio_port === port)
+	socketio_port = port+1;
 
 var app = connect()
-	.use(connect.favicon(__dirname + '/../data/img/favicon.ico'))
+	.use(connect.favicon(config.www_dir + '/img/favicon.ico'))
 	.use(connect.logger('dev'))
-	.use(connect.static(__dirname + '/../data'))
+	.use(connect.static(config.www_dir))
 	.use(function(req, res) {
 	var path = req.originalUrl.substr(1);
 
@@ -30,6 +31,9 @@ var app = connect()
 		parts.push('index');
 		path = parts.join('/');
 	}
+
+	var hostname = req.headers.host.split(':').shift();
+	var appendScript = '<script src="//'+hostname+':'+socketio_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//'+hostname+':'+socketio_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
 
 	exec('php "' + __dirname + '/app/index.php" -l ' + path, function(error, stdout, stderr) {
 		if(stderr) console.log('ERROR: %s'.red, stderr);
@@ -55,30 +59,32 @@ io.sockets.on('connection', function (socket) {
 });
 
 server.listen(port);
-socket_server.listen(socket_port);
+socket_server.listen(socketio_port);
 
-console.log('[%s]', 'enjoy '+host+':'+port);
+console.log('[%s]', 'web '+host+':'+port);
+console.log('[%s]', 'sockets '+host+':'+socketio_port);
 
 var dirtyState = false;
 var compilations = 0;
 var reloadConnections = function() {
 	if(dirtyState && compilations === 0) {
+		var count = 0;
 		for(var k in connections) {
 			connections[k].emit('reload');
+			count++;
 		}
+		console.log('RELOADING', count, (count > 1) ? 'PAGES' : 'PAGE');
 		dirtyState = false;
 	}
 };
 setInterval(reloadConnections, 100);
 
 (function() {
-	var watch_dir = __dirname + '/../data/less';
-
 	var files = {
 		//	'input.less': 'output.css'
 	};
 
-	files[__dirname + '/../data/less/screen.less'] = __dirname + '/../data/css/screen.css';
+	files[config.www_dir + '/less/screen.less'] = config.www_dir + '/css/screen.css';
 
 	var interval = 100; // ms
 	var dirty = true;
@@ -103,7 +109,7 @@ setInterval(reloadConnections, 100);
 
 	var fw = new FileWatcher();
 
-	fw.add(path.relative(process.env.PWD, watch_dir)+"/**");
+	fw.add(config.www_dir+"/less/**");
 	fw.on('change', function(filename){
 		compileAll();
 	});
@@ -113,8 +119,6 @@ setInterval(reloadConnections, 100);
 
 (function() {
 	var ignore = [".git"];
-
-	var dir = __dirname + '/../data';
 
 	var interval = 100; // ms
 
@@ -128,6 +132,9 @@ setInterval(reloadConnections, 100);
 
 	var fw = new FileWatcher();
 
-	fw.add(path.relative(process.env.PWD, dir)+"/**");
+	fw.add(config.www_dir+"/**");
+	fw.add(config.latte_dir+"/**");
+	fw.add(config.model_dir+"/**");
+
 	fw.on('change', check);
 })();

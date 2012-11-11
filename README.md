@@ -38,10 +38,36 @@ Before first run
 
 `./runner $ php composer.phar update`
 
+Configuration
+=============
+
+In file `mixturette.json`.
+
+```
+{
+	"host": "0.0.0.0",
+
+	"port": 3332,
+	"socketio_port": 3331,
+
+	"www_dir": "www",
+
+	"latte_dir": "www",
+	"model_dir": "www/model",
+
+	"compilers": [{
+			"on_change": ["www/less/**.less"],
+			"exec": "lessc www/less/screen.less > www/css/screen.css"
+		}]
+}
+```
+
+*(* compilers configuration is not ready yet)*
+
 Run, Forrest, run!
 ==================
 
-`$ node ./runner`
+`$ node runner`
 
 Enjoy `http://localhost:3332`
 

@@ -1,0 +1,14 @@
+[
+	{
+		"caption": "Nulla euismod adipiscing",
+		"perex": "Maecenas convallis suscipit est, at **facilisis justo** consectetur quis. Mauris vel suscipit metus. Nulla euismod adipiscing ligula ut vehicula. Aenean eget purus sit amet augue laoreet sollicitudin quis id massa."
+	},
+	{
+		"caption": "Mauris nunc libero",
+		"perex": "Aenean `eget purus sit amet augue` laoreet sollicitudin quis id massa. \"Mauris nunc libero\":http://www.theuselessweb.com/, pellentesque in euismod a, vestibulum a lectus. Nam lobortis rutrum sapien, vitae pulvinar turpis pulvinar rutrum. Vivamus blandit, lacus venenatis euismod rutrum, ipsum purus auctor tortor, vitae pellentesque lectus enim ut augue. Praesent vehicula sem eget augue luctus sagittis. Nam eleifend leo eget nibh volutpat et dictum nisi hendrerit. Curabitur ac lorem in neque varius gravida sit amet et risus. Ut et ligula sit amet diam rhoncus suscipit ac nec magna. Nam eget libero felis, id fermentum tortor."
+	},
+	{
+		"caption": "Nam quis nisi eget mi interdum",
+		"perex": "Nunc *tempus fermentum* arcu, id feugiat neque bibendum ut. Nam quis nisi eget mi interdum ultrices quis varius justo. Sed vitae purus in leo dignissim rhoncus. Ut eleifend orci in diam tincidunt facilisis. Duis ac risus enim. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus at tortor quis tellus tempor placerat. Sed non enim felis, eget mattis ligula. Sed commodo velit ut enim ultricies laoreet."
+	}
+]

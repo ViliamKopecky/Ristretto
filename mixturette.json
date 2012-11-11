@@ -2,13 +2,15 @@
 	"host": "0.0.0.0",
 
 	"port": 3332,
-	"socket_port": 3331,
+	"socketio_port": 3331,
 
-	"latte_dir": "data",
-	"model_dir": "data/model",
+	"www_dir": "www",
+
+	"latte_dir": "www",
+	"model_dir": "www/model",
 
 	"compilers": [{
-			"on_change": ["data/less/**.less"],
-			"exec": "lessc data/less/screen.less > data/css/screen.css"
+			"on_change": ["www/less/**.less"],
+			"exec": "lessc www/less/screen.less > www/css/screen.css"
 		}]
 }
