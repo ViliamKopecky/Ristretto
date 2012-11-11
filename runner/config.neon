@@ -1,7 +1,0 @@
-php:
-	date.timezone: Europe/Prague
-
-parameters:
-	rootDir: "%appDir%/../../data"
-	templatesDir: %rootDir%
-	modelDir: "%rootDir%/model"

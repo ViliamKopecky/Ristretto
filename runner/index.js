@@ -7,10 +7,15 @@ var socketio = require('socket.io');
 var FileWatcher = require('./filewatcher');
 var path = require('path');
 
-var port = 3332;
-var socket_port = 3331;
+var config = {};
+if(fs.existsSync('mixturette.json'))
+	config = JSON.parse(fs.readFileSync('mixturette.json'));
 
-var appendScript = '<script src="//localhost:'+socket_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//localhost:'+socket_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
+var host = config.host || '0.0.0.0';
+var port = config.port || 3332;
+var socket_port = config.socket_port || 3331;
+
+var appendScript = '<script src="//'+host+':'+socket_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//'+host+':'+socket_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
 
 var app = connect()
 	.use(connect.favicon(__dirname + '/../data/img/favicon.ico'))
@@ -19,11 +24,14 @@ var app = connect()
 	.use(function(req, res) {
 	var path = req.originalUrl.substr(1);
 
-	if(path === '') {
-		path = 'index';
+	var parts = path.split('\/');
+	var last = parts.pop();
+	if(last === '') {
+		parts.push('index');
+		path = parts.join('/');
 	}
 
-	exec('php "' + __dirname + '/app/index.php" ' + path, function(error, stdout, stderr) {
+	exec('php "' + __dirname + '/app/index.php" -l ' + path, function(error, stdout, stderr) {
 		if(stderr) console.log('ERROR: %s'.red, stderr);
 		if(!error) res.end(stdout + appendScript);
 	});
@@ -49,7 +57,7 @@ io.sockets.on('connection', function (socket) {
 server.listen(port);
 socket_server.listen(socket_port);
 
-console.log('[%s]', 'enjoy localhost:'+port);
+console.log('[%s]', 'enjoy '+host+':'+port);
 
 var dirtyState = false;
 var compilations = 0;

@@ -5,8 +5,8 @@ use Nette\Utils\Finder;
 use Nette\Utils\Strings;
 use Nette\Templating\FileTemplate;
 
-$modelDir = realpath($context->parameters["modelDir"]);
-$templatesDir = realpath($context->parameters["templatesDir"]);
+$modelDir = realpath($config->model_dir);
+$latteDir = realpath($config->latte_dir);
 
 function importModel($filetype, $dir, $parse_function) {
 	$model = array();
@@ -32,10 +32,16 @@ $neon = importModel('neon', $modelDir, function($str) {
 $model = json_decode(json_encode($json + $neon));
 
 $filename = $argv[1];
-$file = $templatesDir . "/$filename.latte";
+$file = $latteDir . "/$filename.latte";
 
 if(!file_exists($file)) {
-	$file = $templatesDir . '/404.latte';
+	$file = $latteDir . '/404.latte';
+}
+
+$list = false;
+if(!file_exists($file)) {
+	$list = true;
+	$file = __DIR__ . '/latte/list.latte';
 }
 
 if(file_exists($file)) {
@@ -54,21 +60,40 @@ if(file_exists($file)) {
 		return $texy->processLine($s);
 	});
 
-	$template->context = $context;
+	$template->config = $config;
 	$template->model = $model;
-	
+
+
+	if($list) {
+		$lattes = array();
+		foreach (Finder::findFiles('*.latte')->from($latteDir) as $path => $file) {
+
+			$url = str_replace($latteDir, '', $path);
+			$name = $url = str_replace(DIRECTORY_SEPARATOR, '/', $url);
+
+			$url = str_replace('.latte', '', $url);
+			
+			$parts = explode('/', $url);
+			$last = array_pop($parts);
+
+			if($last === 'index') {
+				$url = implode('/', $parts);
+				if(empty($url))
+					$url = '/';
+			}
+
+			if(substr($file->getFilename(), 0, 1) === '@') {
+				$url = false;
+			}
+
+			$name = substr($name, 1);
+			$lattes[$name] = $url;
+		}
+		$template->lattes = $lattes;
+	}
+
+
 	$template->render();
 } else {
-	echo "<div style='font-family:sans-serif;text-align:center;line-height:150%;margin-top:30px;'>";
-	echo "<h1>Welcome to <a href='https://github.com/ViliamKopecky/Mixturette'>Mixturette</a></h1>";
-	foreach (Finder::findFiles('*.latte')->in($templatesDir) as $path => $file) {
-		$filename = $file->getFilename();
-		if(substr($filename, 0, 1) !== '@') {
-			$relativePath = str_replace($templatesDir, '', $path);
-			$relativePath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
-			$relativePath = str_replace('.latte', '', $relativePath);
-			echo "<a href='$relativePath'>$filename</a><br>";
-		}
-	}
-	echo "</div>";
+	echo "No template.";
 }

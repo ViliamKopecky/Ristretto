@@ -11,8 +11,26 @@ $configurator->setTempDirectory(__DIR__ . '/temp');
 $configurator->createRobotLoader()
 	->register();
 
-$configurator->addConfig(__DIR__ . '/../config.neon');
 
-$context = $configurator->createContainer();
+$config = new stdClass();
 
-require __DIR__ . '/app.php';
+$config_file = 'mixturette.json';
+if(file_exists($config_file)) {
+	$config = json_decode(file_get_contents($config_file));
+}
+
+switch($argv[1]) {
+	case '--help':
+	case '-h':
+		die('help not available');
+		break;
+	case '--config':
+		var_dump($config);
+		exit;
+		break;
+	case '--latte':
+	case '-l':
+		array_shift($argv);
+		require __DIR__ . '/app.php';
+		exit;
+}
