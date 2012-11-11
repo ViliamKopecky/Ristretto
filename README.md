@@ -41,7 +41,7 @@ Before first run
 Run, Forrest, run!
 ============
 
-`$ node ./runner/index.js`
+`$ node ./runner`
 
 Enjoy `http://localhost:3332`
 
