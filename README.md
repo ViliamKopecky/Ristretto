@@ -78,6 +78,18 @@ See file `testem.json` with configuration. And run tests by:
 
 `./example $ testem`
 
+
+FAQ
+===
+
+There is problem on Mac with watching a lot of files. Try something like this…
+
+`$ ulimit -n 2048`
+
+or
+
+`$ launchctl limit maxfile 2048 4096`
+
 Near future
 ===========
 
