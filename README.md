@@ -3,7 +3,7 @@ Ristretto
 
 Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**](https://npmjs.org/package/bower) and [**Latte**](https://github.com/nette/Latte). This utility is based on the idea of [**Mixture**](http://mixture.io).
 
-- Running server on `http://localhost:3332`. *Access `/foobar` will respond with compiled `example/foobar.latte`.*
+- Running server on `http://localhost:777`. *Access `/foobar` will respond with compiled `example/foobar.latte`.*
 - [**Latte**](http://doc.nette.org/en/default-macros) - the killer templating from [**Nette Framework**](https://nette.org).
 - **Static model** passed directly into templates parsed from [**NE-ON**](http://ne-on.org) and **JSON** files. *`example/model/foobar.json` is in template accessible as `{$model->foobar}`.*
 - **Realtime compilation** of **LESS** files.
@@ -12,6 +12,10 @@ Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**
 - **and… wait for it… LIVE RELOAD on file change.**
 
 ![Ristretto screenshot](https://dl.dropbox.com/u/105619924/ristretto/screenshot.ristretto.png)
+
+
+
+
 
 Before first run
 ================
@@ -38,6 +42,10 @@ Before first run
 
 `./runner $ php composer.phar update`
 
+
+
+
+
 Configuration
 =============
 
@@ -47,8 +55,7 @@ In file `ristretto.json`.
 {
 	"host": "0.0.0.0",
 
-	"port": 3332,
-	"socketio_port": 3331,
+	"port": 777,
 
 	"www_dir": "example",
 
@@ -64,12 +71,16 @@ In file `ristretto.json`.
 
 *(compilers configuration is not ready yet)*
 
+
+
+
+
 Run, Forrest, run!
 ==================
 
 `$ node runner`
 
-Enjoy `http://localhost:3332`
+Enjoy `http://localhost:777`
 
 Client-side javascript testing with Test'em
 ===========================================
@@ -77,6 +88,9 @@ Client-side javascript testing with Test'em
 See file `testem.json` with configuration. And run tests by:
 
 `./example $ testem`
+
+
+
 
 
 FAQ
@@ -89,6 +103,24 @@ There is problem on Mac with watching a lot of files. Try something like this…
 or
 
 `$ launchctl limit maxfile 2048 4096`
+
+
+
+
+
+Mobile devices and virtual machines
+===================================
+
+Well well, someone here takes front-end development seriously.
+
+The key to painless cross-device development is getting the right IP address - how each device can reach your development machine (as a server). On your local network, you open `cmd` od `terminal`, try one of theese bad boys `ifconfig` or `ipconfig` (on Windows) and look for some `IPv4` address that belongs to the network that connects you with your devices (mine is `192.168.100.15`, yours may differ). VirtualBox (and others) creates virtual network, and you'll find different IP under its ethernet adapter (mine is `192.168.56.1`).
+
+When you know your IPs, fun may begin. In each devices web browser open address `<your_ip>:<port>` (mine looks like `192.168.100.15:777`) and you should be there. I reccomend you using [**xip.io**](http://xip.io) - it does some DNS magic, so you use it `<your_ip>.xip.io:<port>` (mine `192.168.100.15.xip.io:777`). Enjoy!
+
+
+
+
+
 
 Near future
 ===========

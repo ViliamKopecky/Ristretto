@@ -1,9 +1,8 @@
 var fs = require('fs');
 var process = require('child_process');
-var connect = require('connect');
+var express = require('express');
 var http = require('http');
 var colors = require('colors');
-var socketio = require('socket.io');
 var FileWatcher = require('./filewatcher');
 var path = require('path');
 
@@ -11,18 +10,28 @@ var config = {};
 if(fs.existsSync('ristretto.json'))
 	config = JSON.parse(fs.readFileSync('ristretto.json'));
 
+config.append_script = fs.readFileSync(__dirname + '/reload_snippet.html') || '';
+
 var host = config.host || '0.0.0.0';
-var port = config.port || 3332;
-var socketio_port = config.socketio_port || 3331;
+var port = config.port || 333;
 
-if(socketio_port === port)
-	socketio_port = port+1;
+var app = express();
+var server = app.listen(port);
+var io = require('socket.io').listen(server);
 
-var app = connect()
-	.use(connect.favicon(config.www_dir + '/img/favicon.ico'))
-	.use(connect.logger('dev'))
-	.use(connect.static(config.www_dir))
-	.use(function(req, res) {
+io.set('log level', 1);
+
+console.log('[%s]', host+':'+port);
+
+app.configure(function(){
+  app.use(express.favicon(config.www_dir + '/img/favicon.ico'));
+  app.use(express.logger('dev'));
+  app.use(express['static'](config.www_dir));
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+});
+
+app.use(function(req, res) {
 	var path = req.originalUrl.substr(1);
 
 	var parts = path.split('\/');
@@ -33,7 +42,6 @@ var app = connect()
 	}
 
 	var hostname = req.headers.host.split(':').shift();
-	var appendScript = '<script src="//'+hostname+':'+socketio_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//'+hostname+':'+socketio_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
 
 	var php = process.spawn('php', [__dirname + '/app/index.php', '-l', path]);
 
@@ -50,33 +58,20 @@ var app = connect()
 	php.on('exit', function(code){
 		setTimeout(function(){
 			// to-do: check if html
-			res.end(appendScript);
+			res.end(config.append_script);
 		}, 30);
 	});
 });
 
-var server = http.createServer(app);
-var socket_server = http.createServer();
-
-var io = socketio.listen(socket_server);
-
-io.set('log level', 1);
-
 var connections = {};
-
+var last_cid = 0;
 io.sockets.on('connection', function (socket) {
-	var cid = Math.random()+"";
+	var cid = last_cid++;
 	connections[cid] = socket;
 	socket.on('disconnect', function(){
 		delete(connections[cid]);
 	});
 });
-
-server.listen(port);
-socket_server.listen(socketio_port);
-
-console.log('[%s]', 'web '+host+':'+port);
-console.log('[%s]', 'sockets '+host+':'+socketio_port);
 
 var dirtyState = false;
 var compilations = 0;
@@ -84,7 +79,7 @@ var reloadConnections = function() {
 	if(dirtyState && compilations === 0) {
 		var count = 0;
 		for(var k in connections) {
-			connections[k].emit('reload');
+			connections[k].emit('reload stylesheets');
 			count++;
 		}
 		console.log('RELOADING', count, (count > 1) ? 'PAGES' : 'PAGE');
@@ -110,8 +105,11 @@ setInterval(reloadConnections, 100);
 			if(stdout) console.log('%s', stdout);
 			if(stderr) console.log('ERROR: %s'.red, stderr);
 			if(!error) console.log('LESS COMPILED | %s'.yellow, new Date().toLocaleTimeString());
-			compilations--;
-			compilations = Math.max(0, compilations);
+			setTimeout(function(){
+				compilations--;
+				compilations = Math.max(0, compilations);
+			}, 20);
+			
 		});
 	};
 

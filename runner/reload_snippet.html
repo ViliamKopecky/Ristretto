@@ -1,0 +1,22 @@
+<!-- ristretto reload snippet -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function() {
+	var socket = io.connect("/");
+	socket.on("connect", function() {
+		socket.on("reload stylesheets", function() {
+			var links = document.getElementsByTagName("link");
+			for(var i = 0; i < links.length; i++) {
+				var link = links[i];
+				if(link.rel === "stylesheet") {
+					link.href += "?";
+				}
+			}
+		});
+		socket.on("reload", function() {
+			window.location.reload();
+		});
+	});
+})();
+</script>
+<!--/ ristretto reload snippet -->

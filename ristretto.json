@@ -1,8 +1,7 @@
 {
 	"host": "0.0.0.0",
 
-	"port": 3332,
-	"socketio_port": 3331,
+	"port": 777,
 
 	"www_dir": "example",
 

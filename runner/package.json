@@ -8,7 +8,7 @@
     "node-watch": "",
     "socket.io": "",
     "colors": "",
-    "connect": "",
+    "express": ">3.0.0",
     "glob": ""
   }
 }
