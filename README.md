@@ -3,9 +3,9 @@ Ristretto
 
 Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**](https://npmjs.org/package/bower) and [**Latte**](https://github.com/nette/Latte). This utility is based on the idea of [**Mixture**](http://mixture.io).
 
-- Running server on `http://localhost:3332`. *Access `/foobar` will respond with compiled `www/foobar.latte`.*
+- Running server on `http://localhost:3332`. *Access `/foobar` will respond with compiled `example/foobar.latte`.*
 - [**Latte**](http://doc.nette.org/en/default-macros) - the killer templating from [**Nette Framework**](https://nette.org).
-- **Static model** passed directly into templates parsed from [**NE-ON**](http://ne-on.org) and **JSON** files. *`www/model/foobar.json` is in template accessible as `{$model->foobar}`.*
+- **Static model** passed directly into templates parsed from [**NE-ON**](http://ne-on.org) and **JSON** files. *`example/model/foobar.json` is in template accessible as `{$model->foobar}`.*
 - **Realtime compilation** of **LESS** files.
 - [**Bower**](https://npmjs.org/package/bower) - package manager for web (JS, CSS, LESS, etc.) dependencies.
 - [**Test'em**](https://npmjs.org/package/testem) - easy testing engine for client-side JS. *Using [**Jasmine**](https://npmjs.org/package/jasmine) by default.*
@@ -30,7 +30,7 @@ Before first run
 
 **Update Bower components**
 
-`./www $ bower update`
+`./example $ bower update`
 
 **Update [Node.js](http://nodejs.org/) packages and [Composer](http://getcomposer.org/) packages**
 
@@ -50,14 +50,14 @@ In file `ristretto.json`.
 	"port": 3332,
 	"socketio_port": 3331,
 
-	"www_dir": "www",
+	"www_dir": "example",
 
-	"latte_dir": "www",
-	"model_dir": "www/model",
+	"latte_dir": "example",
+	"model_dir": "example/model",
 
 	"compilers": [{
-			"on_change": ["www/less/**.less"],
-			"exec": "lessc www/less/screen.less > www/css/screen.css"
+			"on_change": ["example/less/**.less"],
+			"exec": "lessc example/less/screen.less > example/css/screen.css"
 		}]
 }
 ```
@@ -76,7 +76,7 @@ Client-side javascript testing with Test'em
 
 See file `testem.json` with configuration. And run tests by:
 
-`./www $ testem`
+`./example $ testem`
 
 Near future
 ===========

@@ -4,13 +4,13 @@
 	"port": 3332,
 	"socketio_port": 3331,
 
-	"www_dir": "www",
+	"www_dir": "example",
 
-	"latte_dir": "www",
-	"model_dir": "www/model",
+	"latte_dir": "example",
+	"model_dir": "example/model",
 
 	"compilers": [{
-			"on_change": ["www/less/**.less"],
-			"exec": "lessc www/less/screen.less > www/css/screen.css"
+			"on_change": ["example/less/**.less"],
+			"exec": "lessc example/less/screen.less > example/css/screen.css"
 		}]
 }
