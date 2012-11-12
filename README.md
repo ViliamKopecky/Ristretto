@@ -20,9 +20,7 @@ Before first run
 
 **Install globally [Bower](https://npmjs.org/package/bower) and [LESS](https://npmjs.org/package/less) compiler**
 
-`$ npm install -g bower`
-
-`$ npm install -g less`
+`$ npm install -g bower less`
 
 **If you want to test client-side javascript, install [**Test'em**](https://npmjs.org/package/testem)**
 
