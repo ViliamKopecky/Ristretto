@@ -1,9 +1,6 @@
 var fs = require('fs');
 var cp = require('child_process');
-var express = require('express');
 var http = require('http');
-var colors = require('colors');
-var FileWatcher = require('./filewatcher');
 var path = require('path');
 
 var config = {};
@@ -52,12 +49,12 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 		if(!cmd) return;
 
 		var update = cp.exec('cd "'+cmd.cwd+'" && '+cmd.cmd, function(err, stdout, stderr){
-			console.log('DONE: %s'.blue, cmd.label);
+			console.log('# DONE: %s', cmd.label);
 			console.log('');
 			update_next();
 		});
 
-		console.log('%s'.yellow, cmd.label);
+		console.log('# %s', cmd.label);
 
 		update.stdout.setEncoding('UTF-8');
 		update.stderr.setEncoding('UTF-8');
@@ -71,6 +68,11 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 	};
 	update_next();
 } else {
+
+	var FileWatcher = require('./filewatcher');
+	var express = require('express');
+	var colors = require('colors');
+
 	var app = express();
 	var server = app.listen(port);
 	var io = require('socket.io').listen(server);
