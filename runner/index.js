@@ -1,5 +1,5 @@
 var fs = require('fs');
-var exec = require('child_process').exec;
+var process = require('child_process');
 var connect = require('connect');
 var http = require('http');
 var colors = require('colors');
@@ -35,9 +35,22 @@ var app = connect()
 	var hostname = req.headers.host.split(':').shift();
 	var appendScript = '<script src="//'+hostname+':'+socketio_port+'/socket.io/socket.io.js"></script><script>(function(){var socket = io.connect("//'+hostname+':'+socketio_port+'");socket.on("connect", function () {socket.on("reload", function () {window.location.reload();});});})();</script>';
 
-	exec('php "' + __dirname + '/app/index.php" -l ' + path, function(error, stdout, stderr) {
-		if(stderr) console.log('ERROR: %s'.red, stderr);
-		if(!error) res.end(stdout + appendScript);
+	var php = process.spawn('php', [__dirname + '/app/index.php', '-l', path]);
+
+	php.stdout.setEncoding('UTF-8');
+
+	php.stdout.on('data', function(data){
+		res.write(data);
+	});
+
+	php.stderr.on('data', function(data){
+		res.write(data);
+	});
+
+	php.on('exit', function(code){
+		setTimeout(function(){
+			res.end(appendScript);
+		}, 30);
 	});
 });
 
@@ -92,7 +105,7 @@ setInterval(reloadConnections, 100);
 	var compile = function(input, output) {
 		compilations++;
 		dirtyState = true;
-		exec('lessc -x ' + input + ' > ' + output, function(error, stdout, stderr) {
+		process.exec('lessc -x ' + input + ' > ' + output, function(error, stdout, stderr) {
 			if(stdout) console.log('%s', stdout);
 			if(stderr) console.log('ERROR: %s'.red, stderr);
 			if(!error) console.log('LESS COMPILED | %s'.yellow, new Date().toLocaleTimeString());

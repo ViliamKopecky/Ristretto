@@ -31,6 +31,15 @@ switch($argv[1]) {
 	case '--latte':
 	case '-l':
 		array_shift($argv);
-		require __DIR__ . '/app.php';
+		try {
+			require __DIR__ . '/app.php';
+		} catch(\Exception $e) {
+			$file = \Nette\Diagnostics\Debugger::log($e);
+			echo "<html><head><title>ERROR</title></head><body>ERROR</body></html>";
+			if(file_exists($file)) {
+				die(file_get_contents($file));
+			}
+			exit;
+		}
 		exit;
 }
