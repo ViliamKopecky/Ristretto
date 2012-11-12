@@ -1,5 +1,5 @@
-Mixturette
-==========
+Ristretto
+=========
 
 Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**](https://npmjs.org/package/bower) and [**Latte**](https://github.com/nette/Latte). This utility is based on the idea of [**Mixture**](http://mixture.io).
 
@@ -11,7 +11,7 @@ Frontend development with [**LESS**](https://npmjs.org/package/less), [**Bower**
 - [**Test'em**](https://npmjs.org/package/testem) - easy testing engine for client-side JS. *Using [**Jasmine**](https://npmjs.org/package/jasmine) by default.*
 - **and… wait for it… LIVE RELOAD on file change.**
 
-![Mixturette screenshot](https://dl.dropbox.com/u/105619924/mixturette/screenshot.mixturette.png)
+![Ristretto screenshot](https://dl.dropbox.com/u/105619924/ristretto/screenshot.ristretto.png)
 
 Before first run
 ================
@@ -41,7 +41,7 @@ Before first run
 Configuration
 =============
 
-In file `mixturette.json`.
+In file `ristretto.json`.
 
 ```
 {

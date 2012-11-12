@@ -14,7 +14,7 @@ $configurator->createRobotLoader()
 
 $config = new stdClass();
 
-$config_file = 'mixturette.json';
+$config_file = 'ristretto.json';
 if(file_exists($config_file)) {
 	$config = json_decode(file_get_contents($config_file));
 }

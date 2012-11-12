@@ -1,5 +1,5 @@
 {
-    "name": "ViliamKopecky/mixturette",
+    "name": "ViliamKopecky/ristretto",
     "description": "Frontend development with LESS, Bower and Latte.",
     "config": {
         "vendor-dir": "app/libs"

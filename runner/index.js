@@ -8,8 +8,8 @@ var FileWatcher = require('./filewatcher');
 var path = require('path');
 
 var config = {};
-if(fs.existsSync('mixturette.json'))
-	config = JSON.parse(fs.readFileSync('mixturette.json'));
+if(fs.existsSync('ristretto.json'))
+	config = JSON.parse(fs.readFileSync('ristretto.json'));
 
 var host = config.host || '0.0.0.0';
 var port = config.port || 3332;
