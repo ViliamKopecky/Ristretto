@@ -48,11 +48,11 @@ Before first run
 Fancy something simpler?
 ========================
 
-**First time**
+**First time** it takes a few minutes.
 
 `$ sudo node runner install` (`sudo` needed for installing global npm packages - LESS, Bower and Test'em)
 
-**Later updating**
+**Later updating** takes less than a few minutes.
 
 `$ node runner update`
 
