@@ -44,6 +44,23 @@ Before first run
 
 
 
+
+Fancy something simpler?
+========================
+
+**First time**
+
+`$ sudo node runner install` (`sudo` needed for installing global npm packages - LESS, Bower and Test'em)
+
+**Later updating**
+
+`$ node runner update`
+
+
+
+
+
+
 Configuration
 =============
 
@@ -80,6 +97,11 @@ Run, Forrest, run!
 
 Enjoy `http://localhost:2012`
 
+
+
+
+
+
 Client-side javascript testing with Test'em
 ===========================================
 
@@ -113,7 +135,7 @@ Well well, someone here takes front-end development seriously.
 
 The key to painless cross-device development is getting the right IP address - how each device can reach your development machine (as a server). On your local network, you open `cmd` od `terminal`, try one of theese bad boys `ifconfig` or `ipconfig` (on Windows) and look for some `IPv4` address that belongs to the network that connects you with your devices (mine is `192.168.100.15`, yours may differ). VirtualBox (and others) creates virtual network, and you'll find different IP under its ethernet adapter (mine is `192.168.56.1`).
 
-When you know your IPs, fun may begin. In each devices web browser open address `<your_ip>:<port>` (mine looks like `192.168.100.15:2012`) and you should be there. I reccomend you using [**xip.io**](http://xip.io) - it does some DNS magic, so you use it `<your_ip>.xip.io:<port>` (mine `192.168.100.15.xip.io:2012`). Enjoy!
+When you know your IPs, fun may begin. In each devices web browser open address `<your_ip>:<port>` (mine looks like `192.168.100.15:2012`) and you should be there. You might like using [**xip.io**](http://xip.io) - then you use it `<your_ip>.xip.io:<port>` (mine `192.168.100.15.xip.io:2012`). Enjoy!
 
 
 
