@@ -62,7 +62,7 @@ In file `ristretto.json`.
 }
 ```
 
-*(* compilers configuration is not ready yet)*
+*(\* compilers configuration is not ready yet)*
 
 Run, Forrest, run!
 ==================
