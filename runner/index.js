@@ -49,6 +49,7 @@ var app = connect()
 
 	php.on('exit', function(code){
 		setTimeout(function(){
+			// to-do: check if html
 			res.end(appendScript);
 		}, 30);
 	});
@@ -122,12 +123,20 @@ setInterval(reloadConnections, 100);
 
 	var fw = new FileWatcher();
 
-	fw.add(config.www_dir+"/less/**");
-	fw.on('change', function(filename){
+	var reloadDirs = function() {
+		fw.add(config.www_dir+"/less/**");
 		compileAll();
+	};
+	reloadDirs();
+	fw.on('change', function(file){
+		compileAll();
+		fs.stat(file, function(err, stat){
+			if(stat.isDirectory()) {
+				reloadDirs();
+			}
+		});
 	});
 
-	compileAll();
 })();
 
 (function() {
@@ -141,13 +150,21 @@ setInterval(reloadConnections, 100);
 			dirtyState = true;
 			console.log("CHANGED: %s".yellow, file);
 		}
+		fs.stat(file, function(err, stat){
+			if(stat.isDirectory()) {
+				reloadDirs();
+			}
+		});
 	};
 
 	var fw = new FileWatcher();
 
-	fw.add(config.www_dir+"/**");
-	fw.add(config.latte_dir+"/**");
-	fw.add(config.model_dir+"/**");
+	var reloadDirs = function() {
+		fw.add(config.www_dir+"/**");
+		fw.add(config.latte_dir+"/**");
+		fw.add(config.model_dir+"/**");
+	};
+	reloadDirs();
 
 	fw.on('change', check);
 })();
