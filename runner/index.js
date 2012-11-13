@@ -15,17 +15,7 @@ var port = config.port || 2012;
 var action = process.argv[2];
 
 if(['update', 'install', 'init'].indexOf(action) !== -1) {
-	var p1 = path.relative(process.cwd, __dirname);
-	var p2 = path.relative(p1, config.www_dir);
-
 	var commands = [];
-	if(['install', 'init'].indexOf(action) !== -1) {
-		commands.push({
-			'label': 'Installing globally LESS, Bower and Test\'em',
-			'cwd': __dirname,
-			'cmd': 'npm install -g less bower testem'
-		});
-	}
 	commands.push({
 		'label': 'Updating Composer',
 		'cwd': __dirname,
@@ -131,20 +121,29 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 		});
 	});
 
-	var dirtyState = false;
+	var dirtyStylesheets = false;
+	var dirtyContent = false;
 	var compilations = 0;
-	var reloadConnections = function() {
-		if(dirtyState && compilations === 0) {
-			var count = 0;
-			for(var k in connections) {
-				connections[k].emit('reload stylesheets');
-				count++;
+	var checkDirty = function() {
+		if(compilations === 0) {
+			if(dirtyContent) {
+				reloadConnections('reload');
+			} else if(dirtyStylesheets) {
+				reloadConnections('reload stylesheets');
 			}
-			console.log('RELOADING', count, (count > 1) ? 'PAGES' : 'PAGE');
-			dirtyState = false;
+			dirtyContent = false;
+			dirtyStylesheets = false;
 		}
 	};
-	setInterval(reloadConnections, 100);
+	var reloadConnections = function(type) {
+		var count = 0;
+		for(var k in connections) {
+			connections[k].emit(type);
+			count++;
+		}
+		console.log('RELOADING (%s)', type, count, (count > 1) ? 'PAGES' : 'PAGE');
+	};
+	setInterval(checkDirty, 100);
 
 	(function() {
 		var files = {
@@ -158,7 +157,6 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 
 		var compile = function(input, output) {
 			compilations++;
-			dirtyState = true;
 			cp.exec('lessc -x ' + input + ' > ' + output, function(error, stdout, stderr) {
 				if(stdout) console.log('%s', stdout);
 				if(stderr) console.log('ERROR: %s'.red, stderr);
@@ -196,14 +194,21 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 	})();
 
 	(function() {
-		var ignore = [".git"];
+		var ignore = ['.git'];
+
+		var stylesheets = ['css', 'less', 'styl', 'stylus', 'sass', 'scss'];
 
 		var interval = 100; // ms
 
 		var check = function(file) {
 			var filename = file.split('\/').pop().split('\\').pop();
+			var ext = filename.split('.').pop();
 			if(ignore.indexOf(filename) === -1) {
-				dirtyState = true;
+				if(stylesheets.indexOf(ext) === -1) {
+					dirtyContent = true;
+				} else {
+					dirtyStylesheets = true;
+				}
 				console.log("CHANGED: %s".yellow, file);
 			}
 			fs.stat(file, function(err, stat){
