@@ -1,0 +1,3 @@
+#!/bin/sh
+runner=`dirname "$0"`
+node "$runner/runner" "$@"
