@@ -1,32 +1,8 @@
 <?php
 
-use Nette\Utils\Neon;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
 use Nette\Templating\FileTemplate;
-
-$modelDir = realpath($config->model_dir);
-$latteDir = realpath($config->latte_dir);
-
-function importModel($filetype, $dir, $parse_function) {
-	$model = array();
-	foreach (Finder::findFiles('*.'.$filetype)->in($dir) as $path => $file) {
-		$parts = explode(DIRECTORY_SEPARATOR, $path);
-		$file_parts = explode('.', array_pop($parts));
-		$model_name = array_shift($file_parts);
-		$model[$model_name] = $parse_function(file_get_contents('safe://' . $path));
-	}
-	return $model;
-}
-
-$json = importModel('json', $modelDir, function($str) {
-	return json_decode($str);
-});
-
-$neon = importModel('neon', $modelDir, function($str) {
-	$neon = new Neon();
-	return $neon->decode($str);
-});
 
 // convert multidimensional array to stdClasses
 $model = json_decode(json_encode($json + $neon));
@@ -92,8 +68,7 @@ if(file_exists($file)) {
 		$template->lattes = $lattes;
 	}
 
-
 	$template->render();
 } else {
-	echo "No template.";
+	echo '<html><head></head><body>No template</body></html>';
 }

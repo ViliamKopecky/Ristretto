@@ -2,6 +2,9 @@
 
 require __DIR__ . '/libs/autoload.php';
 
+use Nette\Utils\Neon;
+use Nette\Utils\Finder;
+
 $configurator = new Nette\Config\Configurator;
 
 $configurator->setDebugMode($configurator::PRODUCTION);
@@ -19,6 +22,29 @@ if(file_exists($config_file)) {
 	$config = json_decode(file_get_contents($config_file));
 }
 
+$modelDir = realpath($config->model_dir);
+$latteDir = realpath($config->latte_dir);
+
+function importModel($filetype, $dir, $parse_function) {
+	$model = array();
+	foreach (Finder::findFiles('*.'.$filetype)->in($dir) as $path => $file) {
+		$parts = explode(DIRECTORY_SEPARATOR, $path);
+		$file_parts = explode('.', array_pop($parts));
+		$model_name = array_shift($file_parts);
+		$model[$model_name] = $parse_function(file_get_contents('safe://' . $path));
+	}
+	return $model;
+}
+
+$json = importModel('json', $modelDir, function($str) {
+	return json_decode($str);
+});
+
+$neon = importModel('neon', $modelDir, function($str) {
+	$neon = new Neon();
+	return $neon->decode($str);
+});
+
 switch($argv[1]) {
 	case '--help':
 	case '-h':
@@ -27,6 +53,11 @@ switch($argv[1]) {
 	case '--config':
 		var_dump($config);
 		exit;
+		break;
+	case '--model':
+	case '-m':
+		array_shift($argv);
+		echo json_encode($json + $neon);
 		break;
 	case '--latte':
 	case '-l':
@@ -42,4 +73,5 @@ switch($argv[1]) {
 			exit;
 		}
 		exit;
+		break;
 }

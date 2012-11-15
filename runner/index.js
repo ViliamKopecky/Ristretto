@@ -91,14 +91,25 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 
 		var parts = path.split('\/');
 		var last = parts.pop();
+
+		var hostname = req.headers.host.split(':').shift();
+
 		if(last === '') {
 			parts.push('index');
 			path = parts.join('/');
 		}
 
-		var hostname = req.headers.host.split(':').shift();
+		var cmd;
+		var append_script;
+		if(path === 'model.js') {
+			cmd = [__dirname + '/app/index.php', '-m'];
+			append_script = '';
+		} else {
+			cmd = [__dirname + '/app/index.php', '-l', path];
+			append_script = config.append_script.toString().split('{{url}}').join('http://'+hostname+':'+port+'/');
+		}
 
-		var php = cp.spawn('php', [__dirname + '/app/index.php', '-l', path]);
+		var php = cp.spawn('php', cmd);
 
 		php.stdout.setEncoding('UTF-8');
 
@@ -113,7 +124,7 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 		php.on('exit', function(code){
 			setTimeout(function(){
 				// to-do: check if html
-				res.end(config.append_script);
+				res.end(append_script);
 			}, 30);
 		});
 	});
