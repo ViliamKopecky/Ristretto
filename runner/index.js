@@ -79,11 +79,15 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 	console.log('[%s]', host+':'+port);
 
 	app.configure(function(){
-	  app.use(express.favicon(config.www_dir + '/img/favicon.ico'));
-	  app.use(express.logger('dev'));
-	  app.use(express['static'](config.www_dir));
-	  app.use(express.bodyParser());
-	  app.use(express.methodOverride());
+		var favicon = config.www_dir + '/img/favicon.ico';
+		if(!fs.existsSync(favicon))
+			favicon = __dirname + '/favicon.ico';
+		if(fs.existsSync(favicon))
+			app.use(express.favicon(favicon));
+		app.use(express.logger('dev'));
+		app.use(express['static'](config.www_dir));
+		app.use(express.bodyParser());
+		app.use(express.methodOverride());
 	});
 
 	app.use(function(req, res) {
