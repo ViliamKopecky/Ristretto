@@ -15,6 +15,7 @@ if(fs.existsSync('ristretto.json'))
 	config = JSON.parse(fs.readFileSync('ristretto.json'));
 
 config.append_script = fs.readFileSync(__dirname + '/reload_snippet.html') || '';
+config.latte_dir = config.latte_dir || config.www_dir;
 
 var host = config.host || '0.0.0.0';
 var port = config.port || 2012;
@@ -69,6 +70,7 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 	var FileWatcher = require('./filewatcher');
 	var express = require('express');
 	var colors = require('colors');
+	var which = require('which');
 
 	var app = express();
 	var server = app.listen(port);
@@ -146,6 +148,33 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 	var dirtyStylesheets = false;
 	var dirtyContent = false;
 	var compilations = 0;
+
+
+
+	var compile = function(pwd, command, params, cb, out) {
+
+		console.log('STARTED [%s]'.yellow, command+' '+params.join(' '));
+		if(out !== true)
+			compilations++;
+		var exec = cp.spawn(which.sync(command), params, { cwd: fs.realpathSync(pwd), evn: process.env });
+
+		exec.stdout.pipe(process.stdout);
+		exec.stderr.pipe(process.stderr);
+
+		exec.on('exit', function() {
+			console.log('FINISHED [%s]'.yellow, command+params.join(' '));
+			setTimeout(function(){
+				if(out !== true)
+					compilations--;
+				compilations = Math.max(0, compilations);
+				if(cb)
+					cb();
+			}, 20);
+		});
+
+	};
+
+
 	var checkDirty = function() {
 		if(compilations === 0) {
 			if(dirtyContent) {
@@ -167,42 +196,29 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 	};
 	setInterval(checkDirty, 100);
 
-	(function() {
-		var files = {
-			//	'input.less': 'output.css'
-		};
 
-		files[config.www_dir + '/less/screen.less'] = config.www_dir + '/css/screen.css';
-
+	var addBuilder = function(pwd, watch, commands) {
 		var interval = 100; // ms
 		var dirty = true;
 
-		var compile = function(input, output) {
-			compilations++;
-			cp.exec('lessc -x ' + input + ' > ' + output, function(error, stdout, stderr) {
-				if(stdout) console.log('%s', stdout);
-				if(stderr) console.log('ERROR: %s'.red, stderr);
-				if(!error) console.log('LESS COMPILED | %s'.yellow, new Date().toLocaleTimeString());
-				setTimeout(function(){
-					compilations--;
-					compilations = Math.max(0, compilations);
-				}, 20);
-				
-			});
-		};
-
 		var compileAll = function() {
-				for(var key in files) {
-					compile(key, files[key]);
+			var j;
+			for(var k in commands) {
+				for(j in commands[k]) {
+					compile(pwd, j, commands[k][j]);
 				}
-			};
+			}
+		};
 
 		var fw = new FileWatcher();
 
 		var reloadDirs = function() {
-			fw.add(config.www_dir+"/less/**");
+			for(var k in watch) {
+				fw.add(watch[k]);
+			}
 			compileAll();
 		};
+
 		reloadDirs();
 		fw.on('change', function(file){
 			compileAll();
@@ -213,7 +229,18 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 			});
 		});
 
-	})();
+	};
+	if(config.build)
+		config.build.forEach(function(val){
+			addBuilder(process.cwd(), val.watch, val.exec);
+		});
+
+	if(config.run)
+		config.run.forEach(function(val){
+			for(var k in val) {
+				compile(process.cwd(), k, val[k], false, true);
+			}
+		});
 
 	(function() {
 		var ignore = ['.git'];
@@ -244,8 +271,12 @@ if(['update', 'install', 'init'].indexOf(action) !== -1) {
 
 		var reloadDirs = function() {
 			fw.add(config.www_dir+"/**");
-			fw.add(config.latte_dir+"/**");
-			fw.add(config.model_dir+"/**");
+
+			if(fs.existsSync(config.latte_dir))
+				fw.add(config.latte_dir+"/**");
+
+			if(config.model_dir && fs.existsSync(config.model_dir))
+				fw.add(config.model_dir+"/**");
 		};
 		reloadDirs();
 

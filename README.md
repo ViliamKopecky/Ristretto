@@ -26,6 +26,8 @@ Before first run
 
 `$ npm install -g bower less`
 
+*You might want to install coffee-script as well*
+
 **If you want to test client-side javascript, install [**Test'em**](https://npmjs.org/package/testem)**
 
 `$ npm install -g testem`
@@ -48,13 +50,9 @@ Before first run
 Fancy something simpler?
 ========================
 
-**First time** it takes a few minutes.
+**Updating NPM, Composer and Bower at once**
 
-`$ sudo node runner install` (`sudo` needed for installing global npm packages - LESS, Bower and Test'em)
-
-**Later updating** takes less than a few minutes.
-
-`$ node runner update`
+`$ ristretto update`
 
 
 
@@ -64,7 +62,18 @@ Fancy something simpler?
 Configuration
 =============
 
-In file `ristretto.json`.
+In file `ristretto.json`. It might be simple:
+
+
+```
+{
+	"port": 2012,
+	"www_dir": "example",
+}
+```
+
+Or it may be sophisticated:
+
 
 ```
 {
@@ -77,14 +86,19 @@ In file `ristretto.json`.
 	"latte_dir": "example",
 	"model_dir": "example/model",
 
-	"compilers": [{
-			"on_change": ["example/less/**.less"],
-			"exec": "lessc example/less/screen.less > example/css/screen.css"
-		}]
+	"run": [
+		{"coffee": ["-o", "example/js", "-w", "example/coffee"]}
+	],
+
+	"build": [
+		{
+			"watch": ["example/less/**.less"],
+			"exec": [{"lessc": ["-x", "example/less/screen.less", ">", "example/css/screen.css"]}]
+		}
+	]
 }
 ```
 
-*(compilers configuration is not ready yet)*
 
 
 
@@ -93,7 +107,7 @@ In file `ristretto.json`.
 Run, Forrest, run!
 ==================
 
-`$ node runner`
+`$ ristretto`
 
 Enjoy `http://localhost:2012`
 
@@ -105,7 +119,7 @@ Enjoy `http://localhost:2012`
 Client-side javascript testing with Test'em
 ===========================================
 
-See file `testem.json` with configuration. And run tests by:
+See file `./example/testem.json` with configuration. And run tests with command:
 
 `./example $ testem`
 

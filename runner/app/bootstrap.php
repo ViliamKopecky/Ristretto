@@ -23,7 +23,11 @@ if(file_exists($config_file)) {
 }
 
 $modelDir = realpath($config->model_dir);
-$latteDir = realpath($config->latte_dir);
+
+if($config->latte_dir)
+	$latteDir = realpath($config->latte_dir);
+else
+	$latteDir = realpath($config->www_dir);
 
 function importModel($filetype, $dir, $parse_function) {
 	$model = array();

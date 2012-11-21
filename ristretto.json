@@ -8,8 +8,14 @@
 	"latte_dir": "example",
 	"model_dir": "example/model",
 
-	"compilers": [{
-			"on_change": ["example/less/**.less"],
-			"exec": "lessc example/less/screen.less > example/css/screen.css"
-		}]
+	"run": [
+		{"coffee": ["-o", "example/js", "-w", "example/coffee"]}
+	],
+
+	"build": [
+		{
+			"watch": ["example/less/**.less"],
+			"exec": [{"lessc": ["-x", "example/less/screen.less", ">", "example/css/screen.css"]}]
+		}
+	]
 }

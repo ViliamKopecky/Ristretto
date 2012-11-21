@@ -9,6 +9,7 @@
     "socket.io": "",
     "colors": "",
     "express": ">3.0.0",
-    "glob": ""
+    "glob": "",
+    "which": ""
   }
 }
