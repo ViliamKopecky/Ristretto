@@ -36,39 +36,57 @@ grunt.initConfig({
 })
 ```
 
-### Best usage with `LESS` and `watch` tasks.
+### Your `Gruntfile.js` might look like this.
+
+Dont forget to mention `grunt-contrib-less` and `grunt-contrib-watch` in your `npm package.json`.
 
 ```js
-grunt.initConfig({
-  pkg: grunt.file.readJSON('package.json'),
-  less: {
-    production: {
-      options: {
-        yuicompress: true
+module.exports = function (grunt) {
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    less: {
+      production: {
+        options: {
+          yuicompress: true
+        },
+        files: {
+          "www/css/screen.css": "www/less/screen.less",
+          "www/css/print.css": "www/less/print.less"
+        }
+      }
+    },
+    watch: {
+      styles: {
+        files: ['www/**/*.less'],
+        tasks: ['less', 'ristretto:stylesheets']
       },
-      files: {
-        "www/css/screen.css": "www/less/screen.less",
-        "www/css/print.css": "www/less/print.less"
+      scripts: {
+        files: ['www/**/*', '!www/**/*.css', '!www/**/*.less'],
+        tasks: ['ristretto:pages']
+      }
+    },
+    ristretto: {
+      options: {
+        model_dir: 'www/model',
+        latte_dir: 'www',
+        www_dir: 'www',
+        port: 2013
+      },
+      server: {
+      },
+      publish: {
+      },
+      stylesheets: {
+      },
+      pages: {
       }
     }
-  },
-  watch: {
-    styles: {
-      files: ['www/**/*.less', 'www/components/**/*.less', 'www/**/*.jpg', 'www/**/*.png'],
-      tasks: ['less', 'ristretto:stylesheets'] // this task will reload only stylesheets without realoading whole page
-    },
-    scripts: {
-      files: ['www/**/*.latte', 'www/model/*'],
-      tasks: ['ristretto:pages'] // this task realoads whole page
-    }
-  },
-  ristretto: {
-    options: {
-      model_dir: 'www/model',
-      latte_dir: 'www',
-      www_dir: 'www',
-      port: 2013
-    }
-  }
-});
+  });
+
+  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-ristretto');
+
+  grunt.registerTask('default', ['ristretto:server', 'less', 'ristretto:pages', 'watch']);
+};
 ```
