@@ -67,6 +67,7 @@ module.exports = function(grunt) {
       }
     };
 
+    io.set('log level', 0);
     io.sockets.on('connection', function (socket) {
       var cid = 'cid_'+(new Date()).getTime();
       connections[cid] = socket;
