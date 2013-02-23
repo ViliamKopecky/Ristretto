@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 
 
   var startupServer = function(options, cb) {
-    var latte = require('../php/latte-compiler'),
+    var latte = require('../php/compile-latte'),
         express = require('express'),
         app = express(),
         server = require('http').createServer(app),
@@ -27,22 +27,34 @@ module.exports = function(grunt) {
     });
 
     app.get('/ristretto.js', function (req, res) {
-      var scripts = fs.readFileSync(__dirname + '/../node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.min.js');
-      scripts += "\n" + fs.readFileSync(__dirname + '/../client/ristretto.js');
-      res.end(200, scripts);
+      var socketio = fs.readFileSync(__dirname + '/../node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.min.js');
+      var client = fs.readFileSync(__dirname + '/../client/ristretto.js').toString().replace('<%= host %>', req.host+':'+options.port);
+      res.type('text/javascript');
+      res.send(200, socketio + "\n;" + client);
     });
+
+    app.get('/reload-pages', function (req, res) {
+      broadcast('reload');
+      res.send(200, 'OK');
+    });
+
+    app.get('/reload-stylesheets', function (req, res) {
+      broadcast('reload stylesheets');
+      res.send(200, 'OK');
+    });
+
 
     app.use(express.static(options.www_dir));
 
     app.use(function(req, res, next) {
       var params = {
-        latte_dir: path.realpath(options.latte_dir)
+        latte_dir: fs.realpathSync(options.latte_dir)
       };
-      if(options.model_dir) {
-        params.model_dir = path.realpath(options.model_dir);
+      if(options.model_dir && fs.existsSync(options.model_dir)) {
+        params.model_dir = fs.realpathSync(options.model_dir);
       }
       latte(req.path, params, function(body){
-        body += '<script src="//'+req.host+'/ristretto.js"></script>';
+        body += '<script src="//'+req.host+':'+options.port+'/ristretto.js"></script>';
         res.send(200, body);
       });
     });
@@ -67,7 +79,9 @@ module.exports = function(grunt) {
   var reload = function(options, type, cb) {
     type = type || 'pages';
 
-    require('request')('http://localhost:'+options.port+'/reload-'+type, function(){
+    var url = 'http://localhost:'+options.port+'/reload-'+type;
+
+    require('request')(url, function(){
       if(cb) {
         cb();
       }
