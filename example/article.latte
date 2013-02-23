@@ -1,8 +1,0 @@
-{extends @layout.latte}
-
-{var $article = $model->articles[0]}
-
-{#title}{$article->caption}{/#}
-{#content}
-<h1><small><a href="/">back</a></small><br>{include #title}</h1>
-{!$article->perex|texy}

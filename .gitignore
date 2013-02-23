@@ -1,2 +1,4 @@
-runner/node_modules
-runner/composer.lock
+example
+node_modules
+npm-debug.log
+tmp
