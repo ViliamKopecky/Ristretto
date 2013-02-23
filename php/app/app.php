@@ -54,9 +54,7 @@ if(file_exists($template_file)) {
 		return $texy->processLine($s);
 	});
 
-	$template->config = $config;
 	$template->model = $model;
-
 
 	if($list) {
 		$lattes = array();
