@@ -38,7 +38,11 @@ grunt.initConfig({
 
 ### Your `Gruntfile.js` might look like this.
 
-Dont forget to mention `grunt-contrib-less` and `grunt-contrib-watch` in your `npm package.json`.
+Dont forget to install theese dependencies `grunt-contrib-less` and `grunt-contrib-watch` in your `npm package.json`.
+
+```shell
+npm install grunt-contrib-less grunt-contrib-watch --save-dep
+```
 
 ```js
 module.exports = function (grunt) {
