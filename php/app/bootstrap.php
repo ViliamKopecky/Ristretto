@@ -1,7 +1,11 @@
 <?php
 
 if(!file_exists(__DIR__ . '/../libs/autoload.php')) {
-	system('php composer.phar update', $result);
+	fwrite(STDERR, "\n[working] Please wait while PHP dependencies are being updated.\n");
+	exec('php composer.phar update', $result);
+	$result = implode("\n", $result);
+	fwrite(STDERR, "\n$result\n");
+	fwrite(STDERR, "\n[updated]\n");
 }
 require __DIR__ . '/../libs/autoload.php';
 
