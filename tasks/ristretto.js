@@ -26,11 +26,20 @@ module.exports = function(grunt) {
       }
     });
 
+    var snippet = null;
+
     app.get('/ristretto.js', function (req, res) {
-      var socketio = fs.readFileSync(__dirname + '/../node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.min.js');
-      var client = fs.readFileSync(__dirname + '/../client/ristretto.js').toString().replace('<%= host %>', req.host+':'+options.port);
       res.type('text/javascript');
-      res.send(200, socketio + "\n;" + client);
+      if(snippet) {
+        res.send(200, snippet);
+      } else {
+        var url = 'http://'+req.host+':'+options.port+'/socket.io/socket.io.js';
+        require('request')(url, function(error, response, body){
+          var socketio = body;
+          var client = fs.readFileSync(__dirname + '/../client/ristretto.js').toString().replace('<%= host %>', req.host+':'+options.port);
+          snippet = socketio + "\n;" + client;
+        });
+      }
     });
 
     app.get('/reload-pages', function (req, res) {
