@@ -38,6 +38,7 @@ module.exports = function(grunt) {
           var socketio = body;
           var client = fs.readFileSync(__dirname + '/../client/ristretto.js').toString().replace('<%= host %>', req.host+':'+options.port);
           snippet = socketio + "\n;" + client;
+          res.send(200, snippet);
         });
       }
     });

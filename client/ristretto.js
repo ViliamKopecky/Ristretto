@@ -3,6 +3,9 @@
 		console.warn('You shall turn Ristretto on.');
 	} else {
 		var socket = io.connect("http://<%= host %>/");
+		socket.on("error", function(e){
+			alert('error '+e);
+		})
 		socket.on("connect", function() {
 			console.log('Ristretto on.');
 			socket.on("reload stylesheets", function() {
