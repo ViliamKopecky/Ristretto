@@ -2,7 +2,11 @@
 
 > Autoreload with LESS and Latte.
 
-## Getting Started
+## Getting Started (If you're not sure what you're doing)
+
+See [RistrettoExample](https://github.com/ViliamKopecky/RistrettoExample)
+
+## Getting Started (If you know what you're doing)
 This plugin requires [Grunt](http://gruntjs.com/) `~0.4.0` and [Composer](http://getcomposer.org/) with PHP `>= 5.3.0`.
 
 ```shell
@@ -27,11 +31,9 @@ grunt.initConfig({
       port: 2013,
       www_dir: 'www',
       latte_dir: 'www',
-      model_dir: 'www/model'
-    },
-    publish: { // not available yet
-      destination: 'dist'
-    },
+      model_dir: 'www/model',
+      publish_dir: 'publish'
+    }
   },
 })
 ```
@@ -76,14 +78,10 @@ module.exports = function (grunt) {
         www_dir: 'www',
         port: 2013
       },
-      server: {
-      },
-      publish: {
-      },
-      stylesheets: {
-      },
-      pages: {
-      }
+      server: {},
+      publish: {},
+      stylesheets: {},
+      pages: {}
     }
   });
 
