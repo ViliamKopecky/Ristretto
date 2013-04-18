@@ -63,9 +63,12 @@ module.exports = function(grunt) {
       if(options.model_dir && fs.existsSync(options.model_dir)) {
         params.model_dir = fs.realpathSync(options.model_dir);
       }
-      latte(req.path, params, function(body){
+      res.status(200);
+      latte(req.path, params, function(data){
+        res.write(data);
+      }, function(body){
         body += '<script src="//'+req.host+':'+options.port+'/ristretto.js"></script>';
-        res.send(200, body);
+        res.end();
       });
     });
 

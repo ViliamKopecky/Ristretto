@@ -1,11 +1,29 @@
 <?php
 
 if(!file_exists(__DIR__ . '/../libs/autoload.php')) {
+	header('Content-Type: text/html;charset=utf-8');
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Updating PHP dependencies, please wait</title>
+<style>body { font-family: sans-serif; }</style>
+</head>
+<body>
+<h1>Ristretto is updating PHP dependencies.</h1>
+<?php
 	fwrite(STDERR, "\n[working] Please wait while PHP dependencies are being updated.\n");
 	exec('php composer.phar update', $result);
 	$result = implode("\n", $result);
 	fwrite(STDERR, "\n$result\n");
 	fwrite(STDERR, "\n[updated]\n");
+?>
+<script>window.location.reload();</script>
+</body>
+</html>
+<?php
+	exit;
 }
 require __DIR__ . '/../libs/autoload.php';
 
