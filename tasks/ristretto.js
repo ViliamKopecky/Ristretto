@@ -13,6 +13,49 @@ module.exports = function(grunt) {
       path = require('path');
 
 
+  var publish = function(options, done) {
+    var latte = require('../php/compile-latte');
+
+    var params = {
+      latte_dir: fs.realpathSync(options.latte_dir)
+    };
+
+    if(options.model_dir && fs.existsSync(options.model_dir)) {
+      params.model_dir = fs.realpathSync(options.model_dir);
+    }
+
+    var files = grunt.file.expand({ cwd: params.latte_dir }, ['**/*.latte']);
+
+    var published = 0;
+
+    var dest = options.publish_dir + '/';
+    dest = dest.replace('//', '/');
+
+    var is_done = function() {
+      published++;
+      if(published === files.length) {
+        done();
+      }
+    };
+
+    var next = function(){
+      if(published === files.length) {
+        return done();
+      }
+      var filepath = files[published];
+
+      latte(filepath, params, null, function(body){
+        var write = dest + filepath.substr(0, filepath.length - 'latte'.length) + 'html';
+        grunt.file.write(write, body);
+        published++;
+        next();
+      });
+    };
+
+    next();
+  };
+
+
   var startupServer = function(options, cb) {
     var latte = require('../php/compile-latte'),
         express = require('express'),
@@ -108,20 +151,20 @@ module.exports = function(grunt) {
     var options = this.options({
       port: 2013,
       www_dir: 'www',
+      publish_dir: 'publish',
       latte_dir: 'www',
       model_dir: null
     });
 
-    if(this.target === 'server') {
-      startupServer(options, function(){
-        done();
-      });
-    } else if(this.target === 'publish') {
-      // to-do: implement
-    } else {
-      reload(options, this.target, function(){
-        done();
-      });
+    switch(this.target) {
+      case 'server':
+        startupServer(options, done);
+        break;
+      case 'publish':
+        publish(options, done);
+        break;
+      default:
+        reload(options, this.target, done);
     }
 
     });
