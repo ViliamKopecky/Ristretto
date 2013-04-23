@@ -110,7 +110,7 @@ module.exports = function(grunt) {
       latte(req.path, params, function(data){
         res.write(data);
       }, function(body){
-        body += '<script src="//'+req.host+':'+options.port+'/ristretto.js"></script>';
+        res.write('<script src="//'+req.host+':'+options.port+'/ristretto.js"></script>')
         res.end();
       });
     });
