@@ -69,6 +69,8 @@ module.exports = function(grunt) {
       }
     });
 
+    grunt.log.ok('Ristretto running on port: '+options.port);
+
     var snippet = null;
 
     app.get('/ristretto.js', function (req, res) {
@@ -110,7 +112,7 @@ module.exports = function(grunt) {
       latte(req.path, params, function(data){
         res.write(data);
       }, function(body){
-        res.write('<script src="//'+req.host+':'+options.port+'/ristretto.js"></script>')
+        res.write('<script>(function(){var s=document.createElement("script");s.setAttribute("src", "//"+location.hostname+":'+options.port+'/ristretto.js");document.getElementsByTagName("body")[0].appendChild(s);void(s);})();</script>');
         res.end();
       });
     });
@@ -136,7 +138,7 @@ module.exports = function(grunt) {
   var reload = function(options, type, cb) {
     type = type || 'pages';
 
-    var url = 'http://localhost:'+options.port+'/reload-'+type;
+    var url = 'http://127.0.0.1:'+options.port+'/reload-'+type;
 
     require('request')(url, function(){
       if(cb) {
