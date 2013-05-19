@@ -12,6 +12,31 @@ module.exports = function(grunt) {
   var fs = require('fs'),
       path = require('path');
 
+  var allow_publish = function(dir) {
+    var meta = dir + '/.ristretto.json';
+
+    var allow_write = false;
+
+    if(grunt.file.exists(dir)) { // publish dir/file exists
+      if(grunt.file.isDir(dir)) { // is directory
+        if(grunt.file.exists(meta)) { // contains ristretto metadata
+          allow_write = true;
+        } else { // does not contain ristretto metadata
+          if(grunt.file.expand([dir+'/**.*']).length === 0) { // directory is empty
+            allow_write = true;
+          } else { // directory is not empty, but doesn't contain ristretto metadata
+            grunt.log.error('Publish direrctory "'+dir+'" is not empty.');
+          }
+        }
+      } else { // publish dir is not a directory
+        grunt.log.error('File '+dir+' already exists and is not a directory.');
+      }
+    } else { // publish dir doesn't exist
+      grunt.file.mkdir(dir);
+      allow_write = true;
+    }
+    return allow_write;
+  };
 
   var publish = function(options, done) {
     var latte = require('../php/compile-latte');
@@ -24,22 +49,24 @@ module.exports = function(grunt) {
       params.model_dir = fs.realpathSync(options.model_dir);
     }
 
+    var dest = options.publish_dir + '/';
+    dest = dest.replace('//', '/');
+    var meta_file = dest + 'ristretto.json';
+
+    if(!allow_publish(dest)) {
+      done();
+      return;
+    }
+
+    grunt.file.delete(dest);
+
     var files = grunt.file.expand({ cwd: params.latte_dir }, ['**/*.latte']);
 
     var published = 0;
 
-    var dest = options.publish_dir + '/';
-    dest = dest.replace('//', '/');
-
-    var is_done = function() {
-      published++;
-      if(published === files.length) {
-        done();
-      }
-    };
-
     var next = function(){
       if(published === files.length) {
+        grunt.file.write(meta_file, JSON.stringify({ 'published_by': 'Ristretto', 'timestamp': (new Date()).getTime() }));
         return done();
       }
       var filepath = files[published];
@@ -78,10 +105,11 @@ module.exports = function(grunt) {
       if(snippet) {
         res.send(200, snippet);
       } else {
-        var url = 'http://'+req.host+':'+options.port+'/socket.io/socket.io.js';
+        var url = 'http://127.0.0.1:'+options.port+'/socket.io/socket.io.js';
         require('request')(url, function(error, response, body){
           var socketio = body;
-          var client = fs.readFileSync(__dirname + '/../client/ristretto.js').toString().replace('<%= host %>', req.host+':'+options.port);
+          var client = fs.readFileSync(__dirname + '/../client/ristretto.js').toString().replace('<%= port %>', options.port);
+
           snippet = socketio + "\n;" + client;
           res.send(200, snippet);
         });
