@@ -61,6 +61,7 @@ $configurator->createRobotLoader()
 
 try {
 	$request_path = $argv[1];
+	$list = false; // temporary disabled option to list all latte files
 
 	$options = json_decode($argv[2]);
 
