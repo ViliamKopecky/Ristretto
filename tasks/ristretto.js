@@ -90,13 +90,12 @@ module.exports = function(grunt) {
         server = require('http').createServer(app),
         io = require('socket.io').listen(server);
 
-    server.listen(options.port, function(){
+    server.listen(options.port, '0.0.0.0', function(){
+      grunt.log.ok('Ristretto running on port: '+options.port);
       if(cb) {
         cb();
       }
     });
-
-    grunt.log.ok('Ristretto running on port: '+options.port);
 
     var snippet = null;
 
