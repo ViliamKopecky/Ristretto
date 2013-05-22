@@ -50,8 +50,19 @@ function importModel($filetype, $dir, $parse_function) {
 $configurator = new Nette\Config\Configurator;
 
 $configurator->setDebugMode($configurator::DEVELOPMENT);
-$configurator->enableDebugger(__DIR__ . '/../log');
-$configurator->setTempDirectory(__DIR__ . '/../temp');
+
+$log_dir = __DIR__ . '/../log';
+$temp_dir = __DIR__ . '/../temp';
+
+if(!file_exists($log_dir)) {
+	mkdir($log_dir);
+}
+if(!file_exists($temp_dir)) {
+	mkdir($temp_dir);
+}
+
+$configurator->enableDebugger($log_dir);
+$configurator->setTempDirectory($temp_dir);
 
 $configurator->createRobotLoader()
 	->register();
