@@ -2,9 +2,10 @@
 	if(!window.io) {
 		console.warn('You shall turn Ristretto on.');
 	} else {
-		var socket = io.connect(location.hostname+":<%= port %>/");
+		var url = location.protocol+'//'+location.hostname+":<%= port %>/";
+		var socket = io.connect(url);
 		socket.on("error", function(e){
-			console.warn('error '+e);
+			console.warn('error ', arguments);
 		})
 		socket.on("connect", function() {
 			console.log('Ristretto on.');
