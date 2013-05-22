@@ -1,7 +1,7 @@
 {
   "name": "grunt-ristretto",
   "description": "Autoreload with LESS and Latte.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "homepage": "https://github.com/ViliamKopecky/ristretto",
   "author": {
     "name": "ViliamKopecky",
