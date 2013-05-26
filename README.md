@@ -1,6 +1,6 @@
 # grunt-ristretto
 
-> Autoreload with LESS and Latte.
+> Ftontend development with Latte.
 
 ## Getting Started (If you're not sure what you're doing)
 

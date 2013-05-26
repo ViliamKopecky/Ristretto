@@ -1,6 +1,6 @@
 {
   "name": "grunt-ristretto",
-  "description": "Autoreload with LESS and Latte.",
+  "description": "Frontend development with Latte.",
   "version": "0.3.3",
   "homepage": "https://github.com/ViliamKopecky/ristretto",
   "author": {

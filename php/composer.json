@@ -1,6 +1,6 @@
 {
     "name": "ViliamKopecky/ristretto",
-    "description": "Frontend development with LESS, Bower and Latte.",
+    "description": "Frontend development with Latte.",
     "config": {
         "vendor-dir": "libs"
     },
