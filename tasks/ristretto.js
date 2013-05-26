@@ -9,13 +9,19 @@
 
 module.exports = function(grunt) {
 
+
+
+
   var fs = require('fs'),
       path = require('path');
 
-  var allow_publish = function(dir) {
-    var meta = dir + '/.ristretto.json';
 
+  var version = grunt.file.readJSON(__dirname + '/../package.json').version;
+
+  var allow_publish = function(dir, meta) {
     var allow_write = false;
+
+    console.log(meta, grunt.file.exists(meta));
 
     if(grunt.file.exists(dir)) { // publish dir/file exists
       if(grunt.file.isDir(dir)) { // is directory
@@ -25,11 +31,11 @@ module.exports = function(grunt) {
           if(grunt.file.expand([dir+'/**.*']).length === 0) { // directory is empty
             allow_write = true;
           } else { // directory is not empty, but doesn't contain ristretto metadata
-            grunt.log.error('Publish direrctory "'+dir+'" is not empty.');
+            grunt.warn('Publish direrctory "'+dir+'" is not empty.');
           }
         }
       } else { // publish dir is not a directory
-        grunt.log.error('File '+dir+' already exists and is not a directory.');
+        grunt.warn('File '+dir+' already exists and is not a directory.');
       }
     } else { // publish dir doesn't exist
       grunt.file.mkdir(dir);
@@ -38,22 +44,27 @@ module.exports = function(grunt) {
     return allow_write;
   };
 
+
+
+
   var publish = function(options, done) {
     var latte = require('../php/compile-latte');
 
     var params = {
-      latte_dir: fs.realpathSync(options.latte_dir)
+      latte_dir: fs.realpathSync(options.latte_dir),
+      temp_dir: fs.realpathSync(options.temp_dir)
     };
 
-    if(options.model_dir && fs.existsSync(options.model_dir)) {
+    if(options.model_dir && grunt.file.exists(options.model_dir)) {
       params.model_dir = fs.realpathSync(options.model_dir);
     }
 
     var dest = options.publish_dir + '/';
     dest = dest.replace('//', '/');
-    var meta_file = dest + 'ristretto.json';
 
-    if(!allow_publish(dest)) {
+    var meta = dest + '.ristretto.json';
+
+    if(!allow_publish(dest, meta)) {
       done();
       return;
     }
@@ -66,7 +77,7 @@ module.exports = function(grunt) {
 
     var next = function(){
       if(published === files.length) {
-        grunt.file.write(meta_file, JSON.stringify({ 'published_by': 'Ristretto', 'timestamp': (new Date()).getTime() }));
+        grunt.file.write(meta, JSON.stringify({ 'published_by': 'Ristretto', 'timestamp': (new Date()).getTime() }));
         return done();
       }
       var filepath = files[published];
@@ -83,22 +94,24 @@ module.exports = function(grunt) {
   };
 
 
-  var startupServer = function(options, cb) {
-    var latte = require('../php/compile-latte'),
-        express = require('express'),
-        app = express(),
-        server = require('http').createServer(app),
-        io = require('socket.io').listen(server);
+
+
+  var startupServer = function(options, done) {
+    var latte = require('../php/compile-latte');
+
+    var express = require('express');
+    var app = express();
+    var server = require('http').createServer(app);
+    var io = require('socket.io').listen(server);
 
     server.listen(options.port, '0.0.0.0', function(){
       grunt.log.ok('Ristretto running on port: '+options.port);
-      if(cb) {
-        cb();
+      if(typeof done === 'function') {
+        done();
       }
     });
 
     var snippet = null;
-
     app.get('/ristretto.js', function (req, res) {
       res.type('text/javascript');
       if(snippet) {
@@ -107,7 +120,7 @@ module.exports = function(grunt) {
         var url = 'http://127.0.0.1:'+options.port+'/socket.io/socket.io.js';
         require('request')(url, function(error, response, body){
           var socketio = body;
-          var client = fs.readFileSync(__dirname + '/../client/ristretto.js').toString().replace('<%= port %>', options.port);
+          var client = grunt.file.read(__dirname + '/../client/ristretto.js').toString().replace('<%= port %>', options.port);
 
           snippet = socketio + "\n;" + client;
           res.send(200, snippet);
@@ -125,24 +138,34 @@ module.exports = function(grunt) {
       res.send(200, 'OK');
     });
 
-
     app.use(express.static(options.www_dir));
 
+
+    // latte compiler params
+    var params = {
+      latte_dir: fs.realpathSync(options.latte_dir),
+      temp_dir: fs.realpathSync(options.temp_dir)
+    };
+
+    if(options.model_dir && grunt.file.exists(options.model_dir)) {
+      params.model_dir = fs.realpathSync(options.model_dir);
+    }
+
+    // compile latte templates
     app.use(function(req, res, next) {
-      var params = {
-        latte_dir: fs.realpathSync(options.latte_dir)
-      };
-      if(options.model_dir && fs.existsSync(options.model_dir)) {
-        params.model_dir = fs.realpathSync(options.model_dir);
-      }
       res.status(200);
       latte(req.path, params, function(data){
+        // progress
         res.write(data);
       }, function(body){
-        res.write('<script>(function(){var s=document.createElement("script");s.setAttribute("src", "//"+location.hostname+":'+options.port+'/ristretto.js");document.getElementsByTagName("body")[0].appendChild(s);void(s);})();</script>');
+        // done
+        res.write('<script>(function(){var s=document.createElement("script");s.setAttribute("src", "http://"+location.hostname+":'+options.port+'/ristretto.js");document.getElementsByTagName("body")[0].appendChild(s);void(s);})();</script>');
         res.end();
       });
     });
+
+
+    // socket.io
 
     var connections = {};
 
@@ -162,39 +185,57 @@ module.exports = function(grunt) {
     });
   };
 
-  var reload = function(options, type, cb) {
-    type = type || 'pages';
+
+
+
+  var reload = function(options, type, done) {
+    if(type !== 'stylesheets') {
+      type = 'pages';
+    }
 
     var url = 'http://127.0.0.1:'+options.port+'/reload-'+type;
 
     require('request')(url, function(){
-      if(cb) {
-        cb();
+      if(typeof done === 'function') {
+        done();
       }
     });
   };
 
-  grunt.registerMultiTask('ristretto', 'Autoreloading', function() {
+
+
+
+  grunt.registerTask('ristretto', 'Running Ristretto server', function() {
     var done = this.async();
+    var target = this.args[0] || 'default';
 
     var options = this.options({
       port: 2013,
+      temp_dir: require('os').tmpdir()+'/ristretto-'+version,
       www_dir: 'www',
       publish_dir: 'publish',
       latte_dir: 'www',
       model_dir: null
     });
 
-    switch(this.target) {
-      case 'server':
-        startupServer(options, done);
+    if(!grunt.file.exists(options.temp_dir)) {
+      grunt.file.mkdir(options.temp_dir);
+      grunt.log.ok('Created directory', options.temp_dir);
+    }
+
+    switch(target) {
+      case 'reload':
+        reload(options, 'pages', done);
+        break;
+      case 'reloadStyles':
+        reload(options, 'stylesheets', done);
         break;
       case 'publish':
         publish(options, done);
         break;
       default:
-        reload(options, this.target, done);
+        startupServer(options, done);
     }
 
-    });
+  });
 };

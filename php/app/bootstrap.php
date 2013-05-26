@@ -1,30 +1,10 @@
 <?php
 
-if(!file_exists(__DIR__ . '/../libs/autoload.php')) {
-	header('Content-Type: text/html;charset=utf-8');
-?>
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Updating PHP dependencies, please wait</title>
-<style>body { font-family: sans-serif; }</style>
-</head>
-<body>
-<h1>Ristretto is updating PHP dependencies.</h1>
-<?php
-	fwrite(STDERR, "\n[working] Please wait while PHP dependencies are being updated.\n");
-	exec('php composer.phar update', $result);
-	$result = implode("\n", $result);
-	fwrite(STDERR, "\n$result\n");
-	fwrite(STDERR, "\n[updated]\n");
-?>
-<script>window.location.reload();</script>
-</body>
-</html>
-<?php
-	exit;
-}
+$options = json_decode($argv[2]);
+
+$now = new DateTime();
+
+require __DIR__ . '/update_composer.php';
 require __DIR__ . '/../libs/autoload.php';
 
 use Nette\Utils\Neon,
@@ -51,8 +31,8 @@ $configurator = new Nette\Config\Configurator;
 
 $configurator->setDebugMode($configurator::DEVELOPMENT);
 
-$log_dir = __DIR__ . '/../log';
-$temp_dir = __DIR__ . '/../temp';
+$log_dir = $options->temp_dir . '/log';
+$temp_dir = $options->temp_dir .'/temp';
 
 if(!file_exists($log_dir)) {
 	mkdir($log_dir);
@@ -73,8 +53,6 @@ $configurator->createRobotLoader()
 try {
 	$request_path = $argv[1];
 	$list = false; // temporary disabled option to list all latte files
-
-	$options = json_decode($argv[2]);
 
 	if(empty($options->latte_dir) || !file_exists($options->latte_dir)) {
 		error("Latte directory not found.");
