@@ -5,7 +5,7 @@ $options = json_decode($argv[2]);
 $now = new DateTime();
 
 require __DIR__ . '/update_composer.php';
-require __DIR__ . '/../libs/autoload.php';
+require $options->temp_dir . '/libs/autoload.php';
 
 use Nette\Utils\Neon,
 	Nette\Utils\Finder,
