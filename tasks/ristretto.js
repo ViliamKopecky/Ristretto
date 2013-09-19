@@ -224,9 +224,13 @@ module.exports = function(grunt) {
 
     switch(target) {
       case 'reload':
+      case 'page':
+      case 'pages':
         reload(options, 'pages', done);
         break;
       case 'reloadStyles':
+      case 'stylesheet':
+      case 'stylesheets':
         reload(options, 'stylesheets', done);
         break;
       case 'publish':
