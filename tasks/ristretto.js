@@ -9,6 +9,7 @@
 
 module.exports = function(grunt) {
 
+  var metafilename = '.ristretto.json';
 
 
 
@@ -20,8 +21,6 @@ module.exports = function(grunt) {
 
   var allow_publish = function(dir, meta) {
     var allow_write = false;
-
-    console.log(meta, grunt.file.exists(meta));
 
     if(grunt.file.exists(dir)) { // publish dir/file exists
       if(grunt.file.isDir(dir)) { // is directory
