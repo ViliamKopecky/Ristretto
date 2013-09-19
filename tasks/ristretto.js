@@ -70,7 +70,7 @@ module.exports = function(grunt) {
 
     grunt.file.delete(dest);
 
-    var files = grunt.file.expand({ cwd: params.latte_dir }, ['**/*.latte']);
+    var files = grunt.file.expand({ cwd: params.latte_dir }, ['**/*.latte', '!**/@*.latte']);
 
     var published = 0;
 
