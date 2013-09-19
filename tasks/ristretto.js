@@ -61,7 +61,7 @@ module.exports = function(grunt) {
     var dest = options.publish_dir + '/';
     dest = dest.replace('//', '/');
 
-    var meta = dest + '.ristretto.json';
+    var meta = dest + metafilename;
 
     if(!allow_publish(dest, meta)) {
       done();
