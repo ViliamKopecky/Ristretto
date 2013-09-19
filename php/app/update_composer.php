@@ -24,8 +24,8 @@ if($should_update_composer) {
 	$cwd = getcwd();
 	chdir($options->temp_dir);
 	fwrite(STDERR, "\n[working] Please wait while PHP dependencies are being updated.\n");
-	exec('php composer.phar self-update', $result);
-	exec('php composer.phar update', $result);
+	exec('php -d detect_unicode=Off composer.phar self-update', $result);
+	exec('php -d detect_unicode=Off composer.phar update', $result);
 	$result = implode("\n", $result);
 	fwrite(STDERR, "\n$result\n");
 	fwrite(STDERR, "\n[updated]\n");
