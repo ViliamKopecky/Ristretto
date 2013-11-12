@@ -1,9 +1,9 @@
 ;(function() {
-	if(!window.io) {
-		console.warn('You shall turn Ristretto on.');
-	} else {
-		var connect_ristretto = function() {
-			var url = location.protocol+'//'+location.hostname+":<%= port %>/";
+	var url = location.protocol+'\/\/'+location.hostname+":{$port}";
+	window._start_ristretto = function(Faye){
+		if(!Faye) {
+			console.warn('You shall turn Ristretto on.');
+		} else {
 			var reload_stylesheets = function(first_time) {
 				var links = document.getElementsByTagName("link");
 				for(var i = 0; i < links.length; i++) {
@@ -13,19 +13,22 @@
 					}
 				}
 			};
-			var socket = io.connect(url);
-			socket.on("error", function(){
-				console.warn('error', arguments);
-			});
-			socket.on("connect", function() {
-				console.log('Ristretto on.');
-				socket.on("reload stylesheets", reload_stylesheets);
-				socket.on("reload", function() {
-					window.location.reload();
+			var connect_ristretto = function() {
+				var client = new Faye.Client(url+'\/faye');
+				client.subscribe('\/reload', function(message) {
+					switch(message.type) {
+						case 'stylesheets':
+							reload_stylesheets();
+							break;
+						case 'page':
+							window.location.reload();
+							break;
+					}
 				});
-			});
-			reload_stylesheets(true);
-		};
-		connect_ristretto();
-	}
+				reload_stylesheets(true);
+			};
+			connect_ristretto();
+		}
+	};
+	(function(){var s=document.createElement("script");s.setAttribute("src", "http://"+location.hostname+":{$port}/faye.js");s.onload=function(){window._start_ristretto(Faye)};document.getElementsByTagName("body")[0].appendChild(s);void(s);})();
 })();

@@ -1,13 +1,9 @@
 {
     "name": "ViliamKopecky/ristretto",
-    "description": "Frontend development with Latte.",
-    "config": {
-        "vendor-dir": "libs"
-    },
     "require": {
         "php": ">= 5.3.0",
-        "nette/nette": "@dev",
-        "dg/texy": "@dev"
+        "nette/nette-minified": "@dev",
+        "texy/texy": "@dev"
     },
     "authors": [
         {
