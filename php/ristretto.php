@@ -144,7 +144,7 @@ if($has_config || $has_latte || $has_list_templates) {
 			createTemplate($url_path)->render(); exit;
 		} else if($url_exists) {
 			if(is_dir($url_path)) {
-				$url_path = Strings::trim($url_path, '/');
+				$url_path = rtrim($url_path, '/');
 				$url_path .= '/index.latte';
 			}
 			if(file_exists($url_path)) {
