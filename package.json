@@ -37,6 +37,7 @@
   "dependencies": {
     "faye": "~1.0.0",
     "express": "~3.4.4",
-    "request": "~2.27.0"
+    "request": "~2.27.0",
+    "co-prompt": "~1.0.0"
   }
 }
