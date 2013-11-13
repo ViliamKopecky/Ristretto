@@ -191,11 +191,11 @@ module.exports = function(grunt) {
       });
       return;
     } else if(flags['publish']) {
-    publish(config, function(){
-      done();
-    });
+      publish(config, function(){
+        done();
+      });
     return;
-    }  else if(flags['startup']) {
+    } else if(flags['startup']) {
       require('../libs/server').startup(config, function() {
         console.log('Ristretto running on 127.0.0.1:'+config.port);
         done();
