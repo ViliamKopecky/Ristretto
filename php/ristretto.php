@@ -91,6 +91,21 @@ function loadModel($config) {
 	return new \stdClass;
 }
 
+function relativeRoot($path) {
+	$prefix = './.';
+	$str = '.';
+
+	$parts = explode('/', $path);
+
+	$result = '';
+	for($i=2; $i < count($parts); $i++) {
+		$result .= $prefix;
+	}
+	$result .= $str;
+
+	return $result;
+}
+
 // NEON
 $has_neon = isset($options['n']) || isset($options['neon']);
 if($has_neon) {
@@ -141,7 +156,9 @@ if($has_config || $has_latte || $has_list_templates) {
 		$url_path = realpath($cwd . '/' . $config['latte_dir']).'/'.$url;
 		$url_exists = file_exists($url_path);
 		if($path_exists) {
-			createTemplate($url_path)->render(); exit;
+			$template = createTemplate($url_path);
+			$template->baseUrl = $template->basePath = relativeRoot($url_path);
+			$template->render(); exit;
 		} else if($url_exists) {
 			if(is_dir($url_path)) {
 				$url_path = rtrim($url_path, '/');
@@ -150,6 +167,7 @@ if($has_config || $has_latte || $has_list_templates) {
 			if(file_exists($url_path)) {
 				$template = createTemplate($url_path);
 				$template->model = loadModel($config);
+				$template->baseUrl = $template->basePath = relativeRoot($url_path);
 				$template->render(); exit;
 			} else {
 				err("Latte file `{$url_path}` cannot be found.");
