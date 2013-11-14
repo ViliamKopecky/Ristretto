@@ -70,7 +70,7 @@ module.exports = function(grunt) {
       next_total++;
     };
 
-    var published_copy = 1;
+    var published_copy = 0;
     var next_copy = function(){
       if(published_copy === copy_files.length) {
         grunt.log.ok('Finished: Copy static files');
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
     };
     next_copy();
 
-    var published_latte = 1;
+    var published_latte = 0;
     var next_latte = function(){
       if(published_latte === latte_files.length) {
         grunt.log.ok('Finished: Compile Latte files');
@@ -106,7 +106,7 @@ module.exports = function(grunt) {
     };
     next_latte();
 
-    var published_neon = 1;
+    var published_neon = 0;
     var next_neon = function(){
       if(published_neon === neon_files.length) {
         grunt.log.ok('Finished: Compile NE-ON files');
