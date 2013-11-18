@@ -43,7 +43,7 @@ grunt.initConfig({
 Dont forget to install theese dependencies `grunt-contrib-less` and `grunt-contrib-watch` in your `npm package.json`.
 
 ```shell
-npm install grunt-contrib-less grunt-contrib-watch --save-dep
+npm install grunt-contrib-less grunt-contrib-watch --save-dev
 ```
 
 ```js
