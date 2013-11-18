@@ -54,7 +54,7 @@ module.exports = function(grunt) {
     var latte2html = php_script.latte2html;
     var neon2json = php_script.neon2json;
 
-    var copy_files = grunt.file.expand({ cwd: params.www_dir }, ['**/*.*', '!**/*.latte', '!**/*.neon', '!**/.*']);
+    var copy_files = grunt.file.expand({ cwd: params.www_dir }, ['**/*.*', '**/.*', '!**/*.latte', '!**/*.neon']);
     var neon_files = grunt.file.expand({ cwd: params.model_dir }, ['**/*.neon']);
     var latte_files = grunt.file.expand({ cwd: params.latte_dir }, ['**/*.latte', '!**/@*.latte']);
 
@@ -78,9 +78,12 @@ module.exports = function(grunt) {
         return;
       }
       var filepath = copy_files[published_copy];
-      grunt.log.writeln('   Copy file', filepath);
 
-      grunt.file.copy(params.www_dir + '/' + filepath, dest + filepath);
+      if(grunt.file.isFile(params.www_dir + '/' + filepath)) {
+        grunt.log.writeln('   Copy file', filepath);
+
+        grunt.file.copy(params.www_dir + '/' + filepath, dest + filepath);
+      }
       published_copy++;
       next_copy();
     };
