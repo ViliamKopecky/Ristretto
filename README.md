@@ -1,6 +1,6 @@
 # grunt-ristretto
 
-> Ftontend development with Latte.
+> Frontend development with Latte.
 
 ## Getting Started (If you're not sure what you're doing)
 
