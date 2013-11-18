@@ -126,7 +126,7 @@ module.exports = function(grunt) {
         } else {
           model_dest += options.model_dir;
         }
-        grunt.log.writeln('   Compiling NE-ON file', filepath);
+        grunt.log.writeln('   Writing NE-ON file', filepath);
         var write = model_dest + '/' +filepath;
         grunt.file.write(write, body);
         published_neon++;
