@@ -14,7 +14,11 @@
 				}
 			};
 			var connect_ristretto = function() {
-				var client = new Faye.Client(url+'\/faye');
+				var client = new Faye.Client(url+'\/faye', {
+					retry: 1,
+					timeout: 3
+				});
+				client.disable('autodisconnect');
 				client.subscribe('\/reload', function(message) {
 					switch(message.type) {
 						case 'stylesheets':
