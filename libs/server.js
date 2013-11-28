@@ -22,6 +22,9 @@ exports.startup = function(config, done) {
     app.use(function(req, res, done){
       if(!(/^\/faye/).test(req.path)) {
         // console.log('#', req.path);
+      } else {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Pragma');
       }
       done();
     });
