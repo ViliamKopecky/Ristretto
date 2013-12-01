@@ -119,7 +119,11 @@ module.exports = function(grunt) {
       var filepath = neon_files[published_neon];
       grunt.log.writeln('   Compiling NE-ON file', filepath);
 
-      neon2json(options, filepath, function(body){
+      var realpath = options.model_dir + '/' + filepath;
+
+      realpath = fs.realpathSync(realpath);
+
+      neon2json(options, realpath, function(body){
         var model_dest = dest;
         if(options.model_dir.indexOf(options.www_dir) === 0) {
           model_dest += options.model_dir.substr(options.www_dir.length+1);
