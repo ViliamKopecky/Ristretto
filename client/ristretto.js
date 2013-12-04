@@ -4,16 +4,29 @@
 		if(!Faye) {
 			console.warn('You shall turn Ristretto on.');
 		} else {
+			var swap_links = function(link, first_time) {
+				var char = (link.href.indexOf('?')>-1) ? '&' : '?';
+				var new_link = link.cloneNode();
+				new_link.href += (first_time === true) ? (char+(new Date()).getTime()) : char;
+				var parent = link.parentNode;
+				new_link.onload = function(){
+					parent.removeChild(link);
+				};
+				parent.appendChild(new_link);
+		};
 			var reload_stylesheets = function(first_time) {
 				var links = document.getElementsByTagName("link");
-				var link, char;
+				var link;
+				var replacing = [];
 				for(var i = 0; i < links.length; i++) {
 					link = links[i];
 					char = '?';
 					if(link.rel === "stylesheet") {
-						char = (link.href.indexOf('?')>-1) ? '&' : '?';
-						link.href += (first_time === true) ? (char+(new Date()).getTime()) : char;
+						replacing.push(link);
 					}
+				}
+				for(i=0; i < replacing.length; i++) {
+					swap_links(replacing[i], first_time);
 				}
 			};
 			var connect_ristretto = function() {
