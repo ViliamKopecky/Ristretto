@@ -6,10 +6,13 @@
 		} else {
 			var reload_stylesheets = function(first_time) {
 				var links = document.getElementsByTagName("link");
+				var link, char;
 				for(var i = 0; i < links.length; i++) {
-					var link = links[i];
+					link = links[i];
+					char = '?';
 					if(link.rel === "stylesheet") {
-						link.href += (first_time === true) ? ("?"+(new Date()).getTime()) : "?";
+						char = (link.href.indexOf('?')>-1) ? '&' : '?';
+						link.href += (first_time === true) ? (char+(new Date()).getTime()) : char;
 					}
 				}
 			};
