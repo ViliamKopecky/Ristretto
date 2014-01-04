@@ -2,7 +2,9 @@
 	var url = location.protocol+'\/\/'+location.hostname+":{$port}";
 	window._start_ristretto = function(Faye){
 		if(!Faye) {
-			console.warn('You shall turn Ristretto on.');
+			if(typeof console !== 'undefined') {
+				console.warn('You shall turn Ristretto on.');
+			}
 		} else {
 			var swap_links = function(link, first_time) {
 				var char = (link.href.indexOf('?')>-1) ? '&' : '?';
@@ -50,5 +52,24 @@
 			connect_ristretto();
 		}
 	};
-	(function(){var s=document.createElement("script");s.setAttribute("src", "http://"+location.hostname+":{$port}/faye.js");s.onload=function(){window._start_ristretto(Faye)};document.getElementsByTagName("body")[0].appendChild(s);void(s);})();
+	(function(){
+		function scriptTag(src, callback) {
+			var s = document.createElement('script');
+			s.type = 'text/' + (src.type || 'javascript');
+			s.src = src.src || src;
+			s.async = false;
+			s.onreadystatechange = s.onload = function () {
+				var state = s.readyState;
+				if (!callback.done && (!state || /loaded|complete/.test(state))) {
+					callback.done = true;
+					callback();
+				}
+			};
+			(document.body || head).appendChild(s);
+		};
+		var script_loaded = function() {
+			window._start_ristretto(Faye);
+		};
+		scriptTag("http://"+location.hostname+":{$port}/faye.js", script_loaded);
+	})();
 })();
