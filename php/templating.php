@@ -4,12 +4,19 @@ namespace Ristretto;
 
 use \Nette\Templating\FileTemplate;
 use \Nette\Latte\Engine;
+use \Nette\Latte\Macros\MacroSet;
 
 function createTemplate($filename) {
 	$template = new FileTemplate($filename);
 
 	$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-	$template->registerFilter(new Engine);
+
+	$latte = new Engine;
+	
+	$set = new MacroSet($latte->compiler);
+	$set->addMacro('paste', 'include dirname($template->getFile()) . DIRECTORY_SEPARATOR . %node.word');
+	
+	$template->registerFilter($latte);
 
 	$texy = new \Texy();
 
