@@ -12,6 +12,6 @@ body {
 </head>
 <body>
 {default $message = 'Error'}
-{!$message|texy}
+{$message|texy|noescape}
 </body>
 </html>
