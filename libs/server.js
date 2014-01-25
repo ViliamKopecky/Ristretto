@@ -47,7 +47,7 @@ exports.startup = function(config, done) {
     });
 
     app.get('/model/:file', function(req, res){
-      var path = config.model_dir + '/' + req.params.file;
+      var path = fs.realpathSync(config.model_dir + '/' + req.params.file);
       if(fs.existsSync(path)) {
         fs.readFile(path, function(err, data){
           res.set('Content-Type', 'text/json;charset=utf8');
