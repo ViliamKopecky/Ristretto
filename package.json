@@ -1,7 +1,7 @@
 {
   "name": "grunt-ristretto",
   "description": "Frontend development with Latte.",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "homepage": "https://github.com/ViliamKopecky/ristretto",
   "author": {
     "name": "ViliamKopecky",
