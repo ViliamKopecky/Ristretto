@@ -253,12 +253,12 @@ module.exports = function(grunt) {
     var request = require('request');
 
     if(flags['reload'] || flags['pages']) {
-      request('http://127.0.0.1:'+config.port+'/reload', function(){
+      request('http://127.0.0.1:'+config.port+'/rstrt-reload', function(){
         done();
       });
     return;
     } else if(flags['reload-stylesheets'] || flags['styles'] || flags['stylesheets']) {
-      request('http://127.0.0.1:'+config.port+'/reload-stylesheets', function(){
+      request('http://127.0.0.1:'+config.port+'/rstrt-reload-stylesheets', function(){
         done();
       });
       return;
