@@ -3,6 +3,11 @@
 	var url = location.protocol+'\/\/'+location.hostname+":{$port}/rstrt";
 
 	// clone link tag, and destroys origin when clone is loaded.
+	var simple_swap_links = function(link, first_time) {
+		var char = (link.href.indexOf('?')>-1) ? '&' : '?';
+		link.href += (first_time === true) ? (char+(new Date()).getTime()) : char;
+	};
+
 	var swap_links = function(link, first_time) {
 		var char = (link.href.indexOf('?')>-1) ? '&' : '?';
 		var new_link = link.cloneNode();
@@ -12,6 +17,10 @@
 			parent.removeChild(link);
 		};
 		parent.appendChild(new_link);
+	};
+
+	var is_touch_device = function() {
+		return 'ontouchstart' in window || 'onmsgesturechange' in window;
 	};
 
 	// finds all link elements, and reloads them.
@@ -26,8 +35,9 @@
 				replacing.push(link);
 			}
 		}
+		var fn = is_touch_device() ? simple_swap_links : swap_links;
 		for(i=0; i < replacing.length; i++) {
-			swap_links(replacing[i], first_time);
+			fn(replacing[i], first_time);
 		}
 	};
 
