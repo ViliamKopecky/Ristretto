@@ -86,7 +86,13 @@ exports.startup = function(config, done) {
 
   reloader.installHandlers(server, { prefix: '/rstrt' });
 
-  server.listen(config.port, '::', function(){
+  var addr = '::';
+
+  if(!require('semver').satisfies(process.version, '>=0.11.12')) {
+    addr = '0.0.0.0';
+  }
+
+  server.listen(config.port, addr, function(){
     if(typeof done === 'function') {
       done();
     }
