@@ -19,7 +19,7 @@ exports.startup = function(config, done) {
   var clients = {};
 
   var broadcast = function(message) {
-    for(key in clients) {
+    for(var key in clients) {
         if(clients.hasOwnProperty(key)) {
             clients[key].write(message);
         }
