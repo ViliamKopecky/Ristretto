@@ -35,7 +35,7 @@
 		var to = setTimeout(function() {
 			clearTimeout(to);
 			fn();
-		}, 20 + Math.pow(2, tryouts)*20);
+		}, 20 + tryouts*5);
 		return to;
 	};
 
