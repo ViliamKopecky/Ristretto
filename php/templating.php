@@ -12,13 +12,15 @@ function createTemplate($filename) {
 	$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 	$latte = new Engine;
-	
+
 	$set = new MacroSet($latte->compiler);
 	$set->addMacro('paste', 'include dirname($template->getFile()) . DIRECTORY_SEPARATOR . %node.word');
-	
+
 	$template->registerFilter($latte);
 
 	$texy = new \Texy();
+	$texy->imageModule->root = '';
+	$texy->imageModule->linkedRoot = '';
 
 	$template->registerHelper('texy', function ($s, $headingTop = 2) use ($texy) {
 		$temp = $texy->headingModule->top;
