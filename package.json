@@ -1,7 +1,7 @@
 {
   "name": "grunt-ristretto",
   "description": "Frontend development with Latte.",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "homepage": "https://github.com/ViliamKopecky/ristretto",
   "author": {
     "name": "ViliamKopecky",
@@ -36,8 +36,8 @@
   ],
   "dependencies": {
     "sockjs": "^0.3.8",
-    "express": "^3.4.8",
-    "request": "^2.27.0",
+    "express": "^3.5.2",
+    "request": "^2.34.0",
     "co-prompt": "~1.0.0",
     "semver": "^2.2.1"
   }
