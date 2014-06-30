@@ -13,7 +13,7 @@ function createTemplate($filename) {
 
 	$latte = new Engine;
 
-	$set = new MacroSet($latte->compiler);
+	$set = new MacroSet($latte->getCompiler());
 	$set->addMacro('paste', 'include dirname($template->getFile()) . DIRECTORY_SEPARATOR . %node.word');
 
 	$template->registerFilter($latte);
