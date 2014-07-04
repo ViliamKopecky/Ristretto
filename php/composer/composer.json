@@ -2,7 +2,7 @@
     "name": "ViliamKopecky/ristretto",
     "require": {
         "php": ">= 5.3.0",
-        "nette/nette-minified": "@dev",
+        "nette/nette-minified": "2.1.x",
         "texy/texy": "@dev"
     },
     "authors": [
