@@ -80,11 +80,26 @@ function modelName($filename) {
 	return array_pop($parts);
 }
 
+function convertMultiline($str) {
+	$parts = explode('"""', $str);
+	$on = TRUE;
+	foreach($parts as $k => $part) {
+		$on = !$on;
+		if($on) {
+			$part = str_replace("\n", '\n', $part);
+			$part = str_replace("\"", "\\\"", $part);
+			$parts[$k] = $part;
+		}
+	}
+	$str = implode('"', $parts);
+	return $str;
+}
+
 function loadModel($config) {
 	$model = array();
 	if(isset($config['model_dir']) && file_exists($config['cwd'] . '/' . $config['model_dir']) && is_dir($config['cwd'] . '/' . $config['model_dir'])) {
 		foreach(Finder::findFiles(array('*.json', '*.neon'))->in($config['cwd'] . '/' . $config['model_dir']) as $path => $file) { // no subdirs
-			$model[modelName($path)] = Neon::decode(file_get_contents($file->getRealPath()));
+			$model[modelName($path)] = Neon::decode(convertMultiline(file_get_contents($file->getRealPath())));
 		}
 		return json_decode(json_encode($model)); // easiest multidimensional array to stdClass
 	}
@@ -114,7 +129,7 @@ if($has_neon) {
 	if(!file_exists($neon_path)) {
 		err("NEON file `$neon_path` cannot be found.");
 	}
-	echo json_encode(Neon::decode(file_get_contents($neon_path)));
+	echo json_encode(Neon::decode(convertMultiline(file_get_contents($neon_path))));
 	exit;
 }
 
@@ -131,7 +146,7 @@ if($has_config || $has_latte || $has_list_templates) {
 		err("Config file `$config_path` cannot be found.");
 	}
 
-	$config = Neon::decode(file_get_contents($config_path));
+	$config = Neon::decode(convertMultiline(file_get_contents($config_path)));
 	$config['cwd'] = $cwd;
 
 	if(empty($config['www_dir'])) {
