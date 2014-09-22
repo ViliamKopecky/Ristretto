@@ -9,7 +9,7 @@
 	};
 
 	var swap_links = function(link, first_time) {
-		var char = (link.href.indexOf('?')>-1) ? '&' : '?';
+		var char = (link.href.indexOf('?')>-1) ? ('&' + Math.random().toString(36).substring(0,2)) : '?';
 		var new_link = link.cloneNode();
 		new_link.href += (first_time === true) ? (char+(new Date()).getTime()) : char;
 		var parent = link.parentNode;
