@@ -2,6 +2,8 @@
 
 namespace Ristretto;
 
+date_default_timezone_set("Europe/Prague");
+
 $options = getopt('hc:l:n:t::r:', array( 'help', 'config:', 'latte:', 'neon:', 'list-templates', 'html', 'ristretto-version' ));
 
 require __DIR__ . '/update_composer.php';
